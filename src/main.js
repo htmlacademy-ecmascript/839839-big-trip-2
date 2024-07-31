@@ -1,17 +1,17 @@
-import NewBriefTripInfo from './view/brief-trip-info.js';
-import NewFormListFilters from './view/list-filter.js';
-import NewTripSort from './view/trip-sort.js';
-import {render, RenderPosition} from './render.js';
-import BoardPresenter from './presenter/board-presenter.js';
+import RouteView from './view/route-view.js';
+import FiltersView from './view/filters-view.js';
+import SortView from './view/sort-view.js';
+import { render, RenderPosition } from './render.js';
+import TripPresenter from './presenter/trip-presenter.js';
 
 const tripMainElement = document.querySelector('.trip-main');
 const filtersElement = document.querySelector('.trip-controls__filters');
 const siteMainElement = document.querySelector('.page-main');
 const tripEventsElement = siteMainElement.querySelector('.trip-events');
-const boardPresenter = new BoardPresenter({boardContainer:tripEventsElement});
+const tripPresenter = new TripPresenter({ boardContainer: tripEventsElement });
 
-render(new NewBriefTripInfo(), tripMainElement, RenderPosition.AFTERBEGIN);
-render(new NewFormListFilters(), filtersElement);
-render(new NewTripSort(), tripEventsElement);
+render(new RouteView(), tripMainElement, RenderPosition.AFTERBEGIN);
+render(new FiltersView(), filtersElement);
+render(new SortView(), tripEventsElement);
 
-boardPresenter.init();
+tripPresenter.init();

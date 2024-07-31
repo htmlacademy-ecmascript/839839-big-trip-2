@@ -1,6 +1,6 @@
-import { createElement } from '../render';
+import { createElement } from '../render.js';
 
-const createTripSort = () =>
+const createSort = () =>
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <div class="trip-sort__item  trip-sort__item--day">
       <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
@@ -28,9 +28,9 @@ const createTripSort = () =>
     </div>
   </form>`;
 
-export default class NewTripSort {
+export default class SortView {
   getTemplate() {
-    return createTripSort();
+    return createSort();
   }
 
   getElement() {

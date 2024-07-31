@@ -1,11 +1,11 @@
-import {createElement} from '../render.js';
+import { createElement } from '../render.js';
 
-const createLoaderTemplate = () =>
+const createMessage = () =>
   '<p class="trip-events__msg">Loading...</p>';
 
-export default class LoaderTemplate {
+export default class MessageView {
   getTemplate() {
-    return createLoaderTemplate();
+    return createMessage();
   }
 
   getElement() {
