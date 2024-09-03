@@ -1,4 +1,4 @@
-export const destination = [
+const Destination = [
   {
     id: '1',
     name: 'Chamonix',
@@ -67,3 +67,4 @@ export const destination = [
   },
 ];
 
+export { Destination };
