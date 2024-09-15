@@ -1,28 +1,38 @@
 import { TYPE, FAVORITE } from './const.js';
-import { randomIntegerNumber, createIntegerIndex } from './util.js';
+import { randomIntegerNumber } from './util.js';
+import { destinations } from './description.js';
 
-const pointId = createIntegerIndex();
-const offersId = createIntegerIndex();
-
-const mockData = {
-  id: pointId(),
-  type: TYPE[randomIntegerNumber(TYPE.length)],
-  startTime: '19/03/19 10:00',
-  endTime: '19/03/19 10:40',
-  destination: {
-    name: '',
-    photo: '#',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+const mockData = [
+  {
+    id: '1',
+    type: TYPE[randomIntegerNumber(TYPE.length)],
+    dateFrom: '2019-07-10T22:55:56.845Z',
+    dateTo: '2019-07-11T11:22:13.375Z',
+    destination: destinations[randomIntegerNumber(destinations.length)].id,
+    offers: [1],
+    basePrice: randomIntegerNumber(1500),
+    isFavorite: FAVORITE[randomIntegerNumber(FAVORITE.length)],
   },
-  offers: [
-    {
-      id: offersId(),
-      title: 'Дополнительная опция',
-      prise: randomIntegerNumber(200),
-    }
-  ],
-  prise: randomIntegerNumber(2000),
-  isFavorite: FAVORITE[randomIntegerNumber(FAVORITE.length)],
-};
+  {
+    id: '2',
+    type: TYPE[randomIntegerNumber(TYPE.length)],
+    dateFrom: '2019-07-22T22:55:56.845Z',
+    dateTo: '2019-07-23T11:22:13.375Z',
+    destination: destinations[randomIntegerNumber(destinations.length)].id,
+    offers: [1, 3],
+    basePrice: randomIntegerNumber(1500),
+    isFavorite: FAVORITE[randomIntegerNumber(FAVORITE.length)],
+  },
+  {
+    id: '3',
+    type: TYPE[randomIntegerNumber(TYPE.length)],
+    dateFrom: '2019-08-10T22:55:56.845Z',
+    dateTo: '2019-09-11T11:22:13.375Z',
+    destination: destinations[randomIntegerNumber(destinations.length)].id,
+    offers: [2],
+    basePrice: randomIntegerNumber(1500),
+    isFavorite: FAVORITE[randomIntegerNumber(FAVORITE.length)],
+  },
+];
 
 export { mockData };
