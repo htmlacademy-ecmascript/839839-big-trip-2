@@ -1,9 +1,4 @@
-const randomIntegerNumber = (number) =>
-  Math.floor(Math.random() * number);
+const getRandomArrayElement = (item) =>
+  item[Math.floor(Math.random() * item.length)];
 
-const createIntegerIndex = () => {
-  let index = 1;
-  return () => index++;
-};
-
-export { randomIntegerNumber, createIntegerIndex };
+export { getRandomArrayElement };
