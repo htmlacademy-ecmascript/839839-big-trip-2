@@ -1,6 +1,9 @@
-const DATE_FORMAT = 'D MMM';
-const DATE_FORMAT_MAX = 'YYYY-MM-DD';
-const TIME_FORMAT = 'HH:mm';
-const DATA_TIME_FORMAT = 'YYYY-MM-DDTHH:mm';
+const dateFormats = {
+  fullDateTime: 'YYYY-MM-DDTHH:mm',
+  shortDateTime: 'DD/MM/YY HH:mm',
+  fullDate: 'YYYY-MM-DD',
+  shortDate: 'MMM D',
+  time: 'HH:mm',
+};
 
-export { DATE_FORMAT, DATE_FORMAT_MAX, TIME_FORMAT, DATA_TIME_FORMAT };
+export { dateFormats };
