@@ -1,11 +1,11 @@
-const offers = [
+const mockOffers = [
   {
     type: 'taxi',
     offers: [
       {
         id: '1',
         title: 'additional offer 1',
-        price: 120
+        price: 110
       },
       {
         id: '2',
@@ -90,7 +90,7 @@ const offers = [
       {
         id: '14',
         title: 'additional offer 14',
-        price: 120
+        price: 10
       },
       {
         id: '15',
@@ -126,28 +126,7 @@ const offers = [
   },
   {
     type: 'sightseeing',
-    offers: [
-      {
-        id: '19',
-        title: 'additional offer 19',
-        price: 54
-      },
-      {
-        id: '20',
-        title: 'additional offer 20',
-        price: 85
-      },
-      {
-        id: '21',
-        title: 'additional offer 21',
-        price: 50
-      },
-      {
-        id: '22',
-        title: 'additional offer 22',
-        price: 120
-      }
-    ]
+    offers: []
   },
   {
     type: 'restaurant',
@@ -161,4 +140,4 @@ const offers = [
   }
 ];
 
-export { offers };
+export { mockOffers };

@@ -1,58 +1,53 @@
-const destinations = [
+const mockDestinations = [
   {
     id: '1',
-    name: 'Chamonix',
+    name: 'Rostov-on-Don',
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     pictures: [
       {
         src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: 'Chamonix parliament building',
+        description: 'Rostov-on-Don photo description',
       }
     ]
   },
   {
     id: '2',
-    name: 'Barcelona',
+    name: 'Sochi',
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     pictures: [
       {
         src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: 'Barcelona parliament building',
+        description: 'Sochi photo description',
       }
     ]
   },
   {
     id: '3',
-    name: 'Berlin',
+    name: 'Ekaterinburg',
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     pictures: [
       {
         src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: 'Berlin parliament building',
+        description: 'Ekaterinburg photo description',
       }
     ]
   },
   {
     id: '4',
-    name: 'London',
+    name: 'Kazan',
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     pictures: [
       {
         src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: 'London parliament building',
+        description: 'Kazan photo description',
       }
     ]
   },
   {
     id: '5',
-    name: 'Dubai',
+    name: 'Saint Petersburg',
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    pictures: [
-      {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: 'Dubai parliament building',
-      }
-    ]
+    pictures: []
   },
   {
     id: '6',
@@ -61,10 +56,10 @@ const destinations = [
     pictures: [
       {
         src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: 'Moscow parliament building',
+        description: 'Moscow photo description',
       }
     ]
   },
 ];
 
-export { destinations };
+export { mockDestinations };
