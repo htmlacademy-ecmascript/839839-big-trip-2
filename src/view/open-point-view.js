@@ -2,8 +2,40 @@ import { createElement } from '../render.js';
 import { formatDate } from '../utils.js';
 import { dateFormats } from '../const.js';
 
-const createOpenPoint = (point) => {
+const getListOffers = (offers) =>
+  offers.length ?
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+          ${offers.map((offer) => (`
+            <div class="event__offer-selector">
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked="">
+              <label class="event__offer-label" for="event-offer-luggage-1">
+                <span class="event__offer-title">${offer.title}</span>
+                +€&nbsp;
+                <span class="event__offer-price">${offer.price}</span>
+              </label>
+            </div>
+            `)).join('')}
+        </div>
+    </section>` : '';
+
+const getPhotoContainer = (pictures) =>
+  pictures.length ?
+    `<div class="event__photos-container">
+      <div class="event__photos-tape">
+      ${pictures.map((pic) => (`
+        <img class="event__photo" src="${pic.src}" alt="${pic.description}">
+        `)).join('')}
+    </div>
+  </div>` : '';
+
+const createOpenPoint = (point, offers, destinations) => {
   const {type, dateFrom, dateTo, basePrice} = point;
+
+  const listOffers = offers.find((offer) => type === offer.type).offers;
+  const poinDestination = destinations.find((dest) => point.destination === dest.id);
+
   return(
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -71,7 +103,7 @@ const createOpenPoint = (point) => {
             <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${poinDestination.name}" list="destination-list-1">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
@@ -99,70 +131,13 @@ const createOpenPoint = (point) => {
           <button class="event__reset-btn" type="reset">Cancel</button>
         </header>
         <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-            <div class="event__available-offers">
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-                <label class="event__offer-label" for="event-offer-luggage-1">
-                  <span class="event__offer-title">Add luggage</span>
-                  &plus;&euro;&nbsp;
-                  <span class="event__offer-price">30</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-                <label class="event__offer-label" for="event-offer-comfort-1">
-                  <span class="event__offer-title">Switch to comfort class</span>
-                  &plus;&euro;&nbsp;
-                  <span class="event__offer-price">100</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-                <label class="event__offer-label" for="event-offer-meal-1">
-                  <span class="event__offer-title">Add meal</span>
-                  &plus;&euro;&nbsp;
-                  <span class="event__offer-price">15</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-                <label class="event__offer-label" for="event-offer-seats-1">
-                  <span class="event__offer-title">Choose seats</span>
-                  &plus;&euro;&nbsp;
-                  <span class="event__offer-price">5</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-                <label class="event__offer-label" for="event-offer-train-1">
-                  <span class="event__offer-title">Travel by train</span>
-                  &plus;&euro;&nbsp;
-                  <span class="event__offer-price">40</span>
-                </label>
-              </div>
-            </div>
-          </section>
+          ${getListOffers(listOffers)}
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+            <p class="event__destination-description">${poinDestination.description}</p>
 
-            <div class="event__photos-container">
-              <div class="event__photos-tape">
-                <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
-              </div>
-            </div>
+            ${getPhotoContainer(poinDestination.pictures)}
           </section>
         </section>
       </form>
@@ -170,12 +145,14 @@ const createOpenPoint = (point) => {
 };
 
 export default class OpenPointView {
-  constructor({point}) {
+  constructor({point, offers, destinations}) {
     this.point = point;
+    this.offers = offers;
+    this.destinations = destinations;
   }
 
   getTemplate() {
-    return createOpenPoint(this.point);
+    return createOpenPoint(this.point, this.offers, this.destinations);
   }
 
   getElement() {
