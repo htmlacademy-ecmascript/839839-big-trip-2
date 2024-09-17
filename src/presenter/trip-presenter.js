@@ -20,12 +20,18 @@ export default class TripPresenter {
     this.tripOffers = [...this.pointModel.getOffer()];
 
     render(this.boardComponent, this.boardContainer);
-    render(new OpenPointView({point: this.tripPoints[0]}), this.boardComponent.getElement());
+    render(new OpenPointView({
+      point: this.tripPoints[0],
+      offers: this.tripOffers,
+      destinations: this.tripDestinations
+    }),
+    this.boardComponent.getElement());
 
     for (let i = 1; i < this.tripPoints.length; i++) {
       render(new ItemPointView({
         point: this.tripPoints[i],
-        destinations: this.tripDestinations
+        offers: this.tripOffers,
+        destinations: this.tripDestinations,
       }),
       this.boardComponent.getElement());
     }
