@@ -16,11 +16,18 @@ export default class TripPresenter {
      * Копия данных модели(временная)
      */
     this.tripPoints = [...this.pointModel.getPoint()];
+    this.tripDestinations = [...this.pointModel.getDestination()];
+    this.tripOffers = [...this.pointModel.getOffer()];
 
     render(this.boardComponent, this.boardContainer);
-    render(new OpenPointView, this.boardComponent.getElement());
-    for (let i = 0; i < this.tripPoints.length; i++) {
-      render(new ItemPointView({point: this.tripPoints[i]}), this.boardComponent.getElement());
+    render(new OpenPointView({point: this.tripPoints[0]}), this.boardComponent.getElement());
+
+    for (let i = 1; i < this.tripPoints.length; i++) {
+      render(new ItemPointView({
+        point: this.tripPoints[i],
+        destinations: this.tripDestinations
+      }),
+      this.boardComponent.getElement());
     }
   }
 }
