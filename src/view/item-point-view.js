@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 import { formatDate } from '../utils.js';
-import { DATE_FORMAT, DATE_FORMAT_MAX, TIME_FORMAT, DATA_TIME_FORMAT } from '../const.js';
+import { dateFormats } from '../const.js';
 
 const createItemPoint = (point) => {
   const {type, basePrice, dateFrom, dateTo, isFavorite} = point;
@@ -10,16 +10,16 @@ const createItemPoint = (point) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${formatDate(dateFrom, DATE_FORMAT_MAX)}">${formatDate(dateFrom, DATE_FORMAT)}</time>
+        <time class="event__date" datetime="${formatDate(dateFrom, dateFormats.fullDate)}">${formatDate(dateFrom, dateFormats.shortDate)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} Amsterdam</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${formatDate(dateFrom, DATA_TIME_FORMAT)}">${formatDate(dateFrom, TIME_FORMAT)}</time>
+            <time class="event__start-time" datetime="${formatDate(dateFrom, dateFormats.fullDateTime)}">${formatDate(dateFrom, dateFormats.time)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${formatDate(dateTo, DATA_TIME_FORMAT)}">${formatDate(dateTo, TIME_FORMAT)}</time>
+            <time class="event__end-time" datetime="${formatDate(dateTo, dateFormats.fullDateTime)}">${formatDate(dateTo, dateFormats.time)}</time>
           </p>
           <p class="event__duration">30M</p>
         </div>
