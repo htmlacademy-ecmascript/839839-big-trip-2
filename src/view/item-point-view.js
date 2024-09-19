@@ -2,9 +2,10 @@ import { createElement } from '../render.js';
 import { formatDate } from '../utils.js';
 import { dateFormats } from '../const.js';
 
-const createItemPoint = (point) => {
+const createItemPoint = (point, offers, destinations) => {
   const {type, basePrice, dateFrom, dateTo, isFavorite} = point;
 
+  const pointDestination = destinations.find((dest) => dest.id === point.destination);
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
   return (
@@ -14,7 +15,7 @@ const createItemPoint = (point) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} Amsterdam</h3>
+        <h3 class="event__title">${type} ${pointDestination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${formatDate(dateFrom, dateFormats.fullDateTime)}">${formatDate(dateFrom, dateFormats.time)}</time>
@@ -48,12 +49,14 @@ const createItemPoint = (point) => {
 };
 
 export default class ItemPointView {
-  constructor({point}) {
+  constructor({point, offers, destinations}) {
     this.point = point;
+    this.offers = offers;
+    this.destinations = destinations;
   }
 
   getTemplate() {
-    return createItemPoint(this.point);
+    return createItemPoint(this.point, this.offers, this.destinations);
   }
 
   getElement() {

@@ -10,13 +10,28 @@ const mockOffers = [
       {
         id: '2',
         title: 'additional offer 2',
-        price: 125
+        price: 12
       },
       {
         id: '3',
         title: 'additional offer 3',
         price: 50
-      }
+      },
+      {
+        id: '24',
+        title: 'additional offer 24',
+        price: 15
+      },
+      {
+        id: '25',
+        title: 'additional offer 25',
+        price: 0
+      },
+      {
+        id: '26',
+        title: 'additional offer 26',
+        price: 35
+      },
     ]
   },
   {
@@ -134,7 +149,7 @@ const mockOffers = [
       {
         id: '23',
         title: 'additional offer 23',
-        price: 0
+        price: 15
       }
     ]
   }

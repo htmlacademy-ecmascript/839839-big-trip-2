@@ -5,7 +5,7 @@ const mockDestinations = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     pictures: [
       {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        src: 'img/photos/1.jpg',
         description: 'Rostov-on-Don photo description',
       }
     ]
@@ -16,7 +16,7 @@ const mockDestinations = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     pictures: [
       {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        src: 'img/photos/3.jpg',
         description: 'Sochi photo description',
       }
     ]
@@ -27,7 +27,7 @@ const mockDestinations = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     pictures: [
       {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        src: 'img/photos/2.jpg',
         description: 'Ekaterinburg photo description',
       }
     ]
@@ -38,7 +38,11 @@ const mockDestinations = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     pictures: [
       {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        src: 'img/photos/1.jpg',
+        description: 'Kazan photo description',
+      },
+      {
+        src: 'img/photos/2.jpg',
         description: 'Kazan photo description',
       }
     ]
@@ -55,7 +59,7 @@ const mockDestinations = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     pictures: [
       {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        src: 'img/photos/5.jpg',
         description: 'Moscow photo description',
       }
     ]
