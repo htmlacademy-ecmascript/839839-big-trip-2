@@ -2,14 +2,16 @@ import { createElement } from '../render.js';
 import { formatDate } from '../utils.js';
 import { dateFormats } from '../const.js';
 
-const getListOffers = (offers) =>
+const isChecked = (offer, selectedOffers) => selectedOffers.includes(offer) ? 'checked' : '';
+
+const getListOffers = (offers, selectedOffers) =>
   offers.length ?
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
           ${offers.map((offer) => (`
             <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked="">
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isChecked(offer, selectedOffers)}>
               <label class="event__offer-label" for="event-offer-luggage-1">
                 <span class="event__offer-title">${offer.title}</span>
                 +€&nbsp;
@@ -35,6 +37,7 @@ const createOpenPoint = (point, offers, destinations) => {
 
   const listOffers = offers.find((offer) => type === offer.type).offers;
   const poinDestination = destinations.find((dest) => point.destination === dest.id);
+  const selectedOffers = listOffers.filter((offer) => point.offers.includes(offer.id));
 
   return(
     `<li class="trip-events__item">
@@ -131,7 +134,7 @@ const createOpenPoint = (point, offers, destinations) => {
           <button class="event__reset-btn" type="reset">Cancel</button>
         </header>
         <section class="event__details">
-          ${getListOffers(listOffers)}
+          ${getListOffers(listOffers, selectedOffers)}
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
