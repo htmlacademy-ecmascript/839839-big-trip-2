@@ -7,6 +7,8 @@ const createItemPoint = (point, offers, destinations) => {
 
   const pointDestination = destinations.find((dest) => dest.id === point.destination);
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
+  const listOffers = offers.find((offer) => type === offer.type).offers;
+  const selectedOffers = listOffers.filter((offer) => point.offers.includes(offer.id));
 
   return (
     `<li class="trip-events__item">
@@ -29,11 +31,13 @@ const createItemPoint = (point, offers, destinations) => {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
+
+        ${selectedOffers.map((off) => `<li class="event__offer">
+            <span class="event__offer-title">${off.title}</span>
             &plus;&euro;&nbsp;
-            <span class="event__offer-price">20</span>
-          </li>
+            <span class="event__offer-price">${off.price}</span>
+          </li>`).join('')}
+
         </ul>
         <button class="event__favorite-btn ${favoriteClassName}" type="button">
           <span class="visually-hidden">Add to favorite</span>
