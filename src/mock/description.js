@@ -18,7 +18,11 @@ const mockDestinations = [
       {
         src: 'img/photos/3.jpg',
         description: 'Sochi photo description',
-      }
+      },
+      {
+        src: 'https://loremflickr.com/248/152?random=65',
+        description: 'cat',
+      },
     ]
   },
   {
@@ -29,7 +33,15 @@ const mockDestinations = [
       {
         src: 'img/photos/2.jpg',
         description: 'Ekaterinburg photo description',
-      }
+      },
+      {
+        src: 'https://loremflickr.com/248/152?random=6',
+        description: 'cat',
+      },
+      {
+        src: 'https://loremflickr.com/248/152?random=5',
+        description: 'cat',
+      },
     ]
   },
   {
