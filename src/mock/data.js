@@ -16,8 +16,8 @@ const mockData = [
   {
     id: '2',
     type: 'bus',
-    dateFrom: '2022-07-22T22:00:00',
-    dateTo: '2022-07-23T11:15:00',
+    dateFrom: '2022-07-23T20:10:00',
+    dateTo: '2022-07-23T21:00:00',
     destination: getRandomArrayElement(mockDestinations).id,
     offers: ['6', '7'],
     basePrice: 160,

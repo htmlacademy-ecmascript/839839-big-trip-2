@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { formatDate } from '../utils.js';
+import { formatDate, getTimeDifference } from '../utils.js';
 import { dateFormats } from '../const.js';
 
 const createItemPoint = (point, offers, destinations) => {
@@ -24,7 +24,7 @@ const createItemPoint = (point, offers, destinations) => {
             &mdash;
             <time class="event__end-time" datetime="${formatDate(dateTo, dateFormats.fullDateTime)}">${formatDate(dateTo, dateFormats.time)}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${getTimeDifference(dateFrom, dateTo)}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
