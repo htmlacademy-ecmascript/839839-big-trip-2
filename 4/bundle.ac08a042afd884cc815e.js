@@ -10,7 +10,8 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "dateFormats": () => (/* binding */ dateFormats)
+/* harmony export */   "dateFormats": () => (/* binding */ dateFormats),
+/* harmony export */   "timeFormats": () => (/* binding */ timeFormats)
 /* harmony export */ });
 const dateFormats = {
   fullDateTime: 'YYYY-MM-DDTHH:mm',
@@ -18,6 +19,13 @@ const dateFormats = {
   fullDate: 'YYYY-MM-DD',
   shortDate: 'MMM D',
   time: 'HH:mm'
+};
+const timeFormats = {
+  minuteTime: 'mm[M]',
+  // 23M
+  hourMinuteTime: 'HH[H] mm[M]',
+  // 02H 44M
+  dayHourMinuteTime: 'DD[D] HH[H] mm[M]' // 51D 02H 30M
 };
 
 
@@ -62,16 +70,16 @@ const mockData = [{
   dateFrom: '2019-03-10T10:55:00.845Z',
   dateTo: '2019-03-11T11:50:00.845Z',
   destination: (0,_util_js__WEBPACK_IMPORTED_MODULE_1__.getRandomArrayElement)(_description_js__WEBPACK_IMPORTED_MODULE_2__.mockDestinations).id,
-  offers: [1, 3],
+  offers: ['1', '3'],
   basePrice: 236,
   isFavorite: (0,_util_js__WEBPACK_IMPORTED_MODULE_1__.getRandomArrayElement)(_const_js__WEBPACK_IMPORTED_MODULE_0__.FAVORITE)
 }, {
   id: '2',
   type: 'bus',
-  dateFrom: '2022-07-22T22:00:00',
-  dateTo: '2022-07-23T11:15:00',
+  dateFrom: '2022-07-23T20:10:00',
+  dateTo: '2022-07-23T21:00:00',
   destination: (0,_util_js__WEBPACK_IMPORTED_MODULE_1__.getRandomArrayElement)(_description_js__WEBPACK_IMPORTED_MODULE_2__.mockDestinations).id,
-  offers: [6, 7],
+  offers: ['6', '7'],
   basePrice: 160,
   isFavorite: (0,_util_js__WEBPACK_IMPORTED_MODULE_1__.getRandomArrayElement)(_const_js__WEBPACK_IMPORTED_MODULE_0__.FAVORITE)
 }, {
@@ -80,7 +88,7 @@ const mockData = [{
   dateFrom: '2024-09-10T22:40:56',
   dateTo: '2024-09-11T11:00:13',
   destination: (0,_util_js__WEBPACK_IMPORTED_MODULE_1__.getRandomArrayElement)(_description_js__WEBPACK_IMPORTED_MODULE_2__.mockDestinations).id,
-  offers: [9],
+  offers: ['9'],
   basePrice: 345,
   isFavorite: (0,_util_js__WEBPACK_IMPORTED_MODULE_1__.getRandomArrayElement)(_const_js__WEBPACK_IMPORTED_MODULE_0__.FAVORITE)
 }, {
@@ -89,7 +97,7 @@ const mockData = [{
   dateFrom: '2024-11-10T14:00:00',
   dateTo: '2024-11-11T15:00:00',
   destination: (0,_util_js__WEBPACK_IMPORTED_MODULE_1__.getRandomArrayElement)(_description_js__WEBPACK_IMPORTED_MODULE_2__.mockDestinations).id,
-  offers: [11, 12],
+  offers: ['11', '12'],
   basePrice: 545,
   isFavorite: (0,_util_js__WEBPACK_IMPORTED_MODULE_1__.getRandomArrayElement)(_const_js__WEBPACK_IMPORTED_MODULE_0__.FAVORITE)
 }, {
@@ -107,7 +115,7 @@ const mockData = [{
   dateFrom: '2024-12-11T11:30:00',
   dateTo: '2024-12-11T14:00:00',
   destination: (0,_util_js__WEBPACK_IMPORTED_MODULE_1__.getRandomArrayElement)(_description_js__WEBPACK_IMPORTED_MODULE_2__.mockDestinations).id,
-  offers: [17],
+  offers: ['23'],
   basePrice: 126,
   isFavorite: (0,_util_js__WEBPACK_IMPORTED_MODULE_1__.getRandomArrayElement)(_const_js__WEBPACK_IMPORTED_MODULE_0__.FAVORITE)
 }, {
@@ -141,7 +149,7 @@ const mockDestinations = [{
   name: 'Rostov-on-Don',
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   pictures: [{
-    src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+    src: 'img/photos/1.jpg',
     description: 'Rostov-on-Don photo description'
   }]
 }, {
@@ -149,23 +157,35 @@ const mockDestinations = [{
   name: 'Sochi',
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
   pictures: [{
-    src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+    src: 'img/photos/3.jpg',
     description: 'Sochi photo description'
+  }, {
+    src: 'https://loremflickr.com/248/152?random=65',
+    description: 'cat'
   }]
 }, {
   id: '3',
   name: 'Ekaterinburg',
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
   pictures: [{
-    src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+    src: 'img/photos/2.jpg',
     description: 'Ekaterinburg photo description'
+  }, {
+    src: 'https://loremflickr.com/248/152?random=6',
+    description: 'cat'
+  }, {
+    src: 'https://loremflickr.com/248/152?random=5',
+    description: 'cat'
   }]
 }, {
   id: '4',
   name: 'Kazan',
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
   pictures: [{
-    src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+    src: 'img/photos/1.jpg',
+    description: 'Kazan photo description'
+  }, {
+    src: 'img/photos/2.jpg',
     description: 'Kazan photo description'
   }]
 }, {
@@ -178,7 +198,7 @@ const mockDestinations = [{
   name: 'Moscow',
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
   pictures: [{
-    src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+    src: 'img/photos/5.jpg',
     description: 'Moscow photo description'
   }]
 }];
@@ -206,11 +226,23 @@ const mockOffers = [{
   }, {
     id: '2',
     title: 'additional offer 2',
-    price: 125
+    price: 12
   }, {
     id: '3',
     title: 'additional offer 3',
     price: 50
+  }, {
+    id: '24',
+    title: 'additional offer 24',
+    price: 15
+  }, {
+    id: '25',
+    title: 'additional offer 25',
+    price: 0
+  }, {
+    id: '26',
+    title: 'additional offer 26',
+    price: 35
   }]
 }, {
   type: 'bus',
@@ -298,7 +330,7 @@ const mockOffers = [{
   offers: [{
     id: '23',
     title: 'additional offer 23',
-    price: 0
+    price: 15
   }]
 }];
 
@@ -395,11 +427,14 @@ class TripPresenter {
     this.tripOffers = [...this.pointModel.getOffer()];
     (0,_render_js__WEBPACK_IMPORTED_MODULE_3__.render)(this.boardComponent, this.boardContainer);
     (0,_render_js__WEBPACK_IMPORTED_MODULE_3__.render)(new _view_open_point_view_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
-      point: this.tripPoints[0]
+      point: this.tripPoints[0],
+      offers: this.tripOffers,
+      destinations: this.tripDestinations
     }), this.boardComponent.getElement());
     for (let i = 1; i < this.tripPoints.length; i++) {
       (0,_render_js__WEBPACK_IMPORTED_MODULE_3__.render)(new _view_item_point_view_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
         point: this.tripPoints[i],
+        offers: this.tripOffers,
         destinations: this.tripDestinations
       }), this.boardComponent.getElement());
     }
@@ -448,12 +483,27 @@ function render(component, container, place = RenderPosition.BEFOREEND) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "formatDate": () => (/* binding */ formatDate)
+/* harmony export */   "formatDate": () => (/* binding */ formatDate),
+/* harmony export */   "getTimeDifference": () => (/* binding */ getTimeDifference)
 /* harmony export */ });
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _const__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./const */ "./src/const.js");
+
 
 const formatDate = (date, format) => date ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(date).format(format) : '';
+const getTimeDifference = (dateStart, dateEnd) => {
+  const difference = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(dateEnd).diff(dateStart, 'minute');
+  if (difference < 60) {
+    return dayjs__WEBPACK_IMPORTED_MODULE_0___default()(difference).format(_const__WEBPACK_IMPORTED_MODULE_1__.timeFormats.minuteTime);
+  }
+  if (difference > 60 && difference < 1440) {
+    return dayjs__WEBPACK_IMPORTED_MODULE_0___default()(difference).format(_const__WEBPACK_IMPORTED_MODULE_1__.timeFormats.hourMinuteTime);
+  }
+  if (difference > 1440) {
+    return dayjs__WEBPACK_IMPORTED_MODULE_0___default()(difference).format(_const__WEBPACK_IMPORTED_MODULE_1__.timeFormats.dayHourMinuteTime);
+  }
+};
 
 
 /***/ }),
@@ -528,7 +578,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const createItemPoint = point => {
+const createItemPoint = (point, offers, destinations) => {
   const {
     type,
     basePrice,
@@ -536,32 +586,37 @@ const createItemPoint = point => {
     dateTo,
     isFavorite
   } = point;
+  const pointDestination = destinations.find(dest => dest.id === point.destination);
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
+  const listOffers = offers.find(offer => type === offer.type).offers;
+  const selectedOffers = listOffers.filter(offer => point.offers.includes(offer.id));
   return `<li class="trip-events__item">
       <div class="event">
         <time class="event__date" datetime="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.fullDate)}">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.shortDate)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} Amsterdam</h3>
+        <h3 class="event__title">${type} ${pointDestination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.fullDateTime)}">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.time)}</time>
             &mdash;
             <time class="event__end-time" datetime="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateTo, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.fullDateTime)}">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateTo, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.time)}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.getTimeDifference)(dateFrom, dateTo)}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
+
+        ${selectedOffers.map(off => `<li class="event__offer">
+            <span class="event__offer-title">${off.title}</span>
             &plus;&euro;&nbsp;
-            <span class="event__offer-price">20</span>
-          </li>
+            <span class="event__offer-price">${off.price}</span>
+          </li>`).join('')}
+
         </ul>
         <button class="event__favorite-btn ${favoriteClassName}" type="button">
           <span class="visually-hidden">Add to favorite</span>
@@ -577,12 +632,16 @@ const createItemPoint = point => {
 };
 class ItemPointView {
   constructor({
-    point
+    point,
+    offers,
+    destinations
   }) {
     this.point = point;
+    this.offers = offers;
+    this.destinations = destinations;
   }
   getTemplate() {
-    return createItemPoint(this.point);
+    return createItemPoint(this.point, this.offers, this.destinations);
   }
   getElement() {
     if (!this.element) {
@@ -642,13 +701,39 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const createOpenPoint = point => {
+const isChecked = (offer, selectedOffers) => selectedOffers.includes(offer) ? 'checked' : '';
+const getListOffers = (offers, selectedOffers) => offers.length ? `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+          ${offers.map(offer => `
+            <div class="event__offer-selector">
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isChecked(offer, selectedOffers)}>
+              <label class="event__offer-label" for="event-offer-luggage-1">
+                <span class="event__offer-title">${offer.title}</span>
+                +€&nbsp;
+                <span class="event__offer-price">${offer.price}</span>
+              </label>
+            </div>
+            `).join('')}
+        </div>
+    </section>` : '';
+const getPhotoContainer = pictures => pictures.length ? `<div class="event__photos-container">
+      <div class="event__photos-tape">
+      ${pictures.map(pic => `
+        <img class="event__photo" src="${pic.src}" alt="${pic.description}">
+        `).join('')}
+    </div>
+  </div>` : '';
+const createOpenPoint = (point, offers, destinations) => {
   const {
     type,
     dateFrom,
     dateTo,
     basePrice
   } = point;
+  const listOffers = offers.find(offer => type === offer.type).offers;
+  const poinDestination = destinations.find(dest => point.destination === dest.id);
+  const selectedOffers = listOffers.filter(offer => point.offers.includes(offer.id));
   return `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
         <header class="event__header">
@@ -715,7 +800,7 @@ const createOpenPoint = point => {
             <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${poinDestination.name}" list="destination-list-1">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
@@ -743,70 +828,13 @@ const createOpenPoint = point => {
           <button class="event__reset-btn" type="reset">Cancel</button>
         </header>
         <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-            <div class="event__available-offers">
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-                <label class="event__offer-label" for="event-offer-luggage-1">
-                  <span class="event__offer-title">Add luggage</span>
-                  &plus;&euro;&nbsp;
-                  <span class="event__offer-price">30</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-                <label class="event__offer-label" for="event-offer-comfort-1">
-                  <span class="event__offer-title">Switch to comfort class</span>
-                  &plus;&euro;&nbsp;
-                  <span class="event__offer-price">100</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-                <label class="event__offer-label" for="event-offer-meal-1">
-                  <span class="event__offer-title">Add meal</span>
-                  &plus;&euro;&nbsp;
-                  <span class="event__offer-price">15</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-                <label class="event__offer-label" for="event-offer-seats-1">
-                  <span class="event__offer-title">Choose seats</span>
-                  &plus;&euro;&nbsp;
-                  <span class="event__offer-price">5</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-                <label class="event__offer-label" for="event-offer-train-1">
-                  <span class="event__offer-title">Travel by train</span>
-                  &plus;&euro;&nbsp;
-                  <span class="event__offer-price">40</span>
-                </label>
-              </div>
-            </div>
-          </section>
+          ${getListOffers(listOffers, selectedOffers)}
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+            <p class="event__destination-description">${poinDestination.description}</p>
 
-            <div class="event__photos-container">
-              <div class="event__photos-tape">
-                <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
-              </div>
-            </div>
+            ${getPhotoContainer(poinDestination.pictures)}
           </section>
         </section>
       </form>
@@ -814,12 +842,16 @@ const createOpenPoint = point => {
 };
 class OpenPointView {
   constructor({
-    point
+    point,
+    offers,
+    destinations
   }) {
     this.point = point;
+    this.offers = offers;
+    this.destinations = destinations;
   }
   getTemplate() {
-    return createOpenPoint(this.point);
+    return createOpenPoint(this.point, this.offers, this.destinations);
   }
   getElement() {
     if (!this.element) {
@@ -1046,4 +1078,4 @@ tripPresenter.init();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle.5497bb74d749509d9198.js.map
+//# sourceMappingURL=bundle.ac08a042afd884cc815e.js.map
