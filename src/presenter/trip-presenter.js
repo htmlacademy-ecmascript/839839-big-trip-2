@@ -1,7 +1,7 @@
 import ListPointsView from '../view/list-points-view.js';
 import ItemPointView from '../view/item-point-view.js';
 import OpenPointView from '../view/open-point-view.js';
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 
 export default class TripPresenter {
   boardComponent = new ListPointsView;
@@ -23,9 +23,9 @@ export default class TripPresenter {
     render(new OpenPointView({
       point: this.tripPoints[0],
       offers: this.tripOffers,
-      destinations: this.tripDestinations
+      destinations: this.tripDestinations,
     }),
-    this.boardComponent.getElement());
+    this.boardComponent.element);
 
     for (let i = 1; i < this.tripPoints.length; i++) {
       render(new ItemPointView({
@@ -33,7 +33,7 @@ export default class TripPresenter {
         offers: this.tripOffers,
         destinations: this.tripDestinations,
       }),
-      this.boardComponent.getElement());
+      this.boardComponent.element);
     }
   }
 }

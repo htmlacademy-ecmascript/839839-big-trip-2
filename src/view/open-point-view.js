@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { formatDate } from '../utils.js';
 import { dateFormats } from '../const.js';
 
@@ -147,25 +147,15 @@ const createOpenPoint = (point, offers, destinations) => {
     </li>`);
 };
 
-export default class OpenPointView {
+export default class OpenPointView extends AbstractView {
   constructor({point, offers, destinations}) {
+    super();
     this.point = point;
     this.offers = offers;
     this.destinations = destinations;
   }
 
-  getTemplate() {
+  get template() {
     return createOpenPoint(this.point, this.offers, this.destinations);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

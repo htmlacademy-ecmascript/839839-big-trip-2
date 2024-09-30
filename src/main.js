@@ -1,7 +1,7 @@
 import RouteView from './view/route-view.js';
 import FiltersView from './view/filters-view.js';
 import SortView from './view/sort-view.js';
-import { render, RenderPosition } from './render.js';
+import { render, RenderPosition } from './framework/render.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import PointModel from './model/point-model.js';
 
