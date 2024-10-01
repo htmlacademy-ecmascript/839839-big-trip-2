@@ -12,7 +12,7 @@ const tripEventsElement = siteMainElement.querySelector('.trip-events');
 
 const pointModel = new PointModel();
 const tripPresenter = new TripPresenter({
-  boardContainer: tripEventsElement,
+  tripContainer: tripEventsElement,
   pointModel
 });
 

@@ -53,14 +53,18 @@ const createItemPoint = (point, offers, destinations) => {
 };
 
 export default class ItemPointView extends AbstractView {
+  #point = null;
+  #offers = null;
+  #destinations = null;
+
   constructor({point, offers, destinations}) {
     super();
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
   }
 
   get template() {
-    return createItemPoint(this.point, this.offers, this.destinations);
+    return createItemPoint(this.#point, this.#offers, this.#destinations);
   }
 }

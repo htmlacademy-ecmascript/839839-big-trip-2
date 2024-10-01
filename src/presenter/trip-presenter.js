@@ -4,36 +4,43 @@ import OpenPointView from '../view/open-point-view.js';
 import { render } from '../framework/render.js';
 
 export default class TripPresenter {
-  boardComponent = new ListPointsView;
+  #tripContainer = null;
+  #pointModel = null;
 
-  constructor({ boardContainer, pointModel }) {
-    this.boardContainer = boardContainer;
-    this.pointModel = pointModel;
+  #tripComponent = new ListPointsView;
+
+  #tripPoints = [];
+  #tripDestinations = [];
+  #tripOffers = [];
+
+  constructor({ tripContainer, pointModel }) {
+    this.#tripContainer = tripContainer;
+    this.#pointModel = pointModel;
   }
 
   init() {
     /**
      * Копия данных модели(временная)
      */
-    this.tripPoints = [...this.pointModel.getPoint()];
-    this.tripDestinations = [...this.pointModel.getDestination()];
-    this.tripOffers = [...this.pointModel.getOffer()];
+    this.#tripPoints = [...this.#pointModel.point];
+    this.#tripDestinations = [...this.#pointModel.destination];
+    this.#tripOffers = [...this.#pointModel.offer];
 
-    render(this.boardComponent, this.boardContainer);
+    render(this.#tripComponent, this.#tripContainer);
     render(new OpenPointView({
-      point: this.tripPoints[0],
-      offers: this.tripOffers,
-      destinations: this.tripDestinations,
+      point: this.#tripPoints[0],
+      offers: this.#tripOffers,
+      destinations: this.#tripDestinations,
     }),
-    this.boardComponent.element);
+    this.#tripComponent.element);
 
-    for (let i = 1; i < this.tripPoints.length; i++) {
+    for (let i = 1; i < this.#tripPoints.length; i++) {
       render(new ItemPointView({
-        point: this.tripPoints[i],
-        offers: this.tripOffers,
-        destinations: this.tripDestinations,
+        point: this.#tripPoints[i],
+        offers: this.#tripOffers,
+        destinations: this.#tripDestinations,
       }),
-      this.boardComponent.element);
+      this.#tripComponent.element);
     }
   }
 }

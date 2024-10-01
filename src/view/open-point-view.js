@@ -148,14 +148,18 @@ const createOpenPoint = (point, offers, destinations) => {
 };
 
 export default class OpenPointView extends AbstractView {
+  #point = null;
+  #offers = null;
+  #destinations = null;
+
   constructor({point, offers, destinations}) {
     super();
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
   }
 
   get template() {
-    return createOpenPoint(this.point, this.offers, this.destinations);
+    return createOpenPoint(this.#point, this.#offers, this.#destinations);
   }
 }
