@@ -27,20 +27,18 @@ export default class TripPresenter {
     this.#tripOffers = [...this.#pointModel.offer];
 
     render(this.#tripComponent, this.#tripContainer);
-    render(new OpenPointView({
-      point: this.#tripPoints[0],
-      offers: this.#tripOffers,
-      destinations: this.#tripDestinations,
-    }),
-    this.#tripComponent.element);
 
     for (let i = 1; i < this.#tripPoints.length; i++) {
-      render(new ItemPointView({
+      this.#renderItemPoint({
         point: this.#tripPoints[i],
         offers: this.#tripOffers,
         destinations: this.#tripDestinations,
-      }),
-      this.#tripComponent.element);
+      });
     }
+  }
+
+  #renderItemPoint(pointData) {
+    const pointComponent = new ItemPointView(pointData);
+    render(pointComponent , this.#tripComponent.element);
   }
 }
