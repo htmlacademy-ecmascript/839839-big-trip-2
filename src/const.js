@@ -7,9 +7,9 @@ const dateFormats = {
 };
 
 const timeFormats = {
-  minuteTime: 'mm[M]',// 23M
-  hourMinuteTime: 'HH[H] mm[M]',// 02H 44M
-  dayHourMinuteTime: 'DD[D] HH[H] mm[M]',// 51D 02H 30M
+  minuteTime: 'mm[M]',
+  hourMinuteTime: 'HH[H] mm[M]',
+  dayHourMinuteTime: 'DD[D] HH[H] mm[M]',
 };
 
 export { dateFormats, timeFormats };
