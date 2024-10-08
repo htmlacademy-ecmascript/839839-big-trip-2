@@ -131,7 +131,10 @@ const createOpenPoint = (point, offers, destinations) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
         </header>
         <section class="event__details">
           ${getListOffers(listOffers, selectedOffers)}
@@ -151,15 +154,30 @@ export default class OpenPointView extends AbstractView {
   #point = null;
   #offers = null;
   #destinations = null;
+  #hendleButtonClick = null;
 
-  constructor({point, offers, destinations}) {
+  constructor({point, offers, destinations, onFormClick}) {
     super();
     this.#point = point;
     this.#offers = offers;
     this.#destinations = destinations;
+    this.#hendleButtonClick = onFormClick;
+
+    this.element.querySelector('form').addEventListener('submit', this.#onSaveClick);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onDeleteClick);
   }
 
   get template() {
     return createOpenPoint(this.#point, this.#offers, this.#destinations);
   }
+
+  #onSaveClick = (evt) => {
+    evt.preventDefault();
+    this.#hendleButtonClick();
+  };
+
+  #onDeleteClick = (evt) => {
+    evt.preventDefault();
+    this.#hendleButtonClick();
+  };
 }

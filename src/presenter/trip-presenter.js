@@ -1,7 +1,7 @@
 import ListPointsView from '../view/list-points-view.js';
 import ItemPointView from '../view/item-point-view.js';
 import OpenPointView from '../view/open-point-view.js';
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -37,8 +37,43 @@ export default class TripPresenter {
     }
   }
 
-  #renderItemPoint(pointData) {
-    const pointComponent = new ItemPointView(pointData);
+  #renderItemPoint({point, offers, destinations}) {
+    const onEscKeydown = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceOpenPointToPoint();
+        document.removeEventListener('keydown', onEscKeydown);
+      }
+    };
+
+    const pointComponent = new ItemPointView({
+      point,
+      offers,
+      destinations,
+      onRollupClick: () => {
+        replacePointToOpenPoint();
+        document.addEventListener('keydown', onEscKeydown);
+      }
+    });
+
+    const openPointComponen = new OpenPointView({
+      point,
+      offers,
+      destinations,
+      onFormClick: () => {
+        replaceOpenPointToPoint();
+        document.removeEventListener('keydown', onEscKeydown);
+      }
+    });
+
+    function replacePointToOpenPoint() {
+      replace(openPointComponen, pointComponent);
+    }
+
+    function replaceOpenPointToPoint() {
+      replace(pointComponent, openPointComponen);
+    }
+
     render(pointComponent , this.#tripComponent.element);
   }
 }
