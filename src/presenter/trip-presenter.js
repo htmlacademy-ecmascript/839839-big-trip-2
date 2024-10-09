@@ -3,13 +3,13 @@ import ItemPointView from '../view/item-point-view.js';
 import OpenPointView from '../view/open-point-view.js';
 import MessageView from '../view/message-view.js';
 import { render, replace } from '../framework/render.js';
-import { messages } from '../const.js';
+import { Message } from '../const.js';
 
 export default class TripPresenter {
   #tripContainer = null;
   #pointModel = null;
 
-  #tripComponent = new ListPointsView;
+  #listPointsComponent = new ListPointsView;
 
   #tripPoints = [];
   #tripDestinations = [];
@@ -50,7 +50,7 @@ export default class TripPresenter {
       }
     });
 
-    const openPointComponen = new OpenPointView({
+    const openPointComponent = new OpenPointView({
       point,
       offers,
       destinations,
@@ -61,30 +61,30 @@ export default class TripPresenter {
     });
 
     function replacePointToOpenPoint() {
-      replace(openPointComponen, pointComponent);
+      replace(openPointComponent, pointComponent);
     }
 
     function replaceOpenPointToPoint() {
-      replace(pointComponent, openPointComponen);
+      replace(pointComponent, openPointComponent);
     }
 
-    render(pointComponent , this.#tripComponent.element);
+    render(pointComponent , this.#listPointsComponent.element);
   }
 
   #renderTrip() {
-    render(this.#tripComponent, this.#tripContainer);
+    render(this.#listPointsComponent, this.#tripContainer);
 
     if (!this.#tripPoints.length) {
-      render(new MessageView(messages.newEvent), this.#tripComponent.element);
+      render(new MessageView(Message.NEW_EVENT), this.#listPointsComponent.element);
       return;
     }
 
-    for (let i = 0; i < this.#tripPoints.length; i++) {
+    this.#tripPoints.forEach((point) => {
       this.#renderPoint({
-        point: this.#tripPoints[i],
+        point,
         offers: this.#tripOffers,
         destinations: this.#tripDestinations,
       });
-    }
+    });
   }
 }
