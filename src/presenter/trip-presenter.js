@@ -31,7 +31,7 @@ export default class TripPresenter {
     this.#renderTrip();
   }
 
-  #renderPoint({point, offers, destinations}) {
+  #renderPoint({point, allOffers, allDestinations}) {
     const onEscKeydown = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
@@ -42,8 +42,8 @@ export default class TripPresenter {
 
     const pointComponent = new ItemPointView({
       point,
-      offers,
-      destinations,
+      allOffers,
+      allDestinations,
       onRollupClick: () => {
         replacePointToOpenPoint();
         document.addEventListener('keydown', onEscKeydown);
@@ -52,8 +52,8 @@ export default class TripPresenter {
 
     const openPointComponent = new OpenPointView({
       point,
-      offers,
-      destinations,
+      allOffers,
+      allDestinations,
       onFormClick: () => {
         replaceOpenPointToPoint();
         document.removeEventListener('keydown', onEscKeydown);
@@ -82,8 +82,8 @@ export default class TripPresenter {
     this.#tripPoints.forEach((point) => {
       this.#renderPoint({
         point,
-        offers: this.#tripOffers,
-        destinations: this.#tripDestinations,
+        allOffers: this.#tripOffers,
+        allDestinations: this.#tripDestinations,
       });
     });
   }

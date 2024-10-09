@@ -58,11 +58,11 @@ export default class ItemPointView extends AbstractView {
   #allDestinations = null;
   #hendleRollupClick = null;
 
-  constructor({point, offers, destinations, onRollupClick}) {
+  constructor({point, allOffers, allDestinations, onRollupClick}) {
     super();
     this.#point = point;
-    this.#allOffers = offers;
-    this.#allDestinations = destinations;
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
     this.#hendleRollupClick = onRollupClick;
 
     this.element.querySelector('.event__rollup-btn')

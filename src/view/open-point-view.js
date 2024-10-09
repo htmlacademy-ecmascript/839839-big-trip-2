@@ -4,12 +4,12 @@ import { DateFormat } from '../const.js';
 
 const isChecked = (offer, selectedOffers) => selectedOffers.includes(offer) ? 'checked' : '';
 
-const getListOffers = (offers, selectedOffers) =>
-  offers.length ?
+const getListOffers = (allOffersByType, selectedOffers) =>
+  allOffersByType.length ?
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-          ${offers.map((offer) => (`
+          ${allOffersByType.map((offer) => (`
             <div class="event__offer-selector">
               <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isChecked(offer, selectedOffers)}>
               <label class="event__offer-label" for="event-offer-luggage-1">
@@ -32,12 +32,12 @@ const getPhotoContainer = (pictures) =>
     </div>
   </div>` : '';
 
-const createOpenPoint = (point, offers, destinations) => {
+const createOpenPoint = (point, allOffers, allDestinations) => {
   const {type, dateFrom, dateTo, basePrice} = point;
 
-  const listOffers = offers.find((offer) => type === offer.type).offers;
-  const poinDestination = destinations.find((dest) => point.destination === dest.id);
-  const selectedOffers = listOffers.filter((offer) => point.offers.includes(offer.id));
+  const allOffersByType = allOffers.find((offer) => type === offer.type).offers;
+  const poinDestination = allDestinations.find((dest) => point.destination === dest.id);
+  const selectedOffers = allOffersByType.filter((offer) => point.offers.includes(offer.id));
 
   return(
     `<li class="trip-events__item">
@@ -137,7 +137,7 @@ const createOpenPoint = (point, offers, destinations) => {
           </button>
         </header>
         <section class="event__details">
-          ${getListOffers(listOffers, selectedOffers)}
+          ${getListOffers(allOffersByType, selectedOffers)}
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -152,15 +152,15 @@ const createOpenPoint = (point, offers, destinations) => {
 
 export default class OpenPointView extends AbstractView {
   #point = null;
-  #offers = null;
-  #destinations = null;
+  #allOffers = null;
+  #allDestinations = null;
   #hendleButtonClick = null;
 
-  constructor({point, offers, destinations, onFormClick}) {
+  constructor({point, allOffers, allDestinations, onFormClick}) {
     super();
     this.#point = point;
-    this.#offers = offers;
-    this.#destinations = destinations;
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
     this.#hendleButtonClick = onFormClick;
 
     this.element.querySelector('form').addEventListener('submit', this.#onSaveClick);
@@ -168,7 +168,7 @@ export default class OpenPointView extends AbstractView {
   }
 
   get template() {
-    return createOpenPoint(this.#point, this.#offers, this.#destinations);
+    return createOpenPoint(this.#point, this.#allOffers, this.#allDestinations);
   }
 
   #onSaveClick = (evt) => {
