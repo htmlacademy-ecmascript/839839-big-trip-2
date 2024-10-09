@@ -2,13 +2,13 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { formatDate, getTimeDifference } from '../utils.js';
 import { DateFormat } from '../const.js';
 
-const createItemPoint = (point, offers, destinations) => {
+const createItemPoint = (point, allOffers, allDestinations) => {
   const {type, basePrice, dateFrom, dateTo, isFavorite} = point;
 
-  const pointDestination = destinations.find((dest) => dest.id === point.destination);
+  const pointDestination = allDestinations.find((dest) => dest.id === point.destination);
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
-  const listOffers = offers.find((offer) => type === offer.type).offers;
-  const selectedOffers = listOffers.filter((offer) => point.offers.includes(offer.id));
+  const allOffersByType = allOffers.find((offer) => type === offer.type).offers;
+  const selectedOffers = allOffersByType.filter((offer) => point.offers.includes(offer.id));
 
   return (
     `<li class="trip-events__item">
