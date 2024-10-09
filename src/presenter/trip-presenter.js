@@ -1,7 +1,9 @@
 import ListPointsView from '../view/list-points-view.js';
 import ItemPointView from '../view/item-point-view.js';
 import OpenPointView from '../view/open-point-view.js';
+import MessageView from '../view/message-view.js';
 import { render, replace } from '../framework/render.js';
+import { messages } from '../const.js';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -26,18 +28,10 @@ export default class TripPresenter {
     this.#tripDestinations = [...this.#pointModel.destination];
     this.#tripOffers = [...this.#pointModel.offer];
 
-    render(this.#tripComponent, this.#tripContainer);
-
-    for (let i = 1; i < this.#tripPoints.length; i++) {
-      this.#renderItemPoint({
-        point: this.#tripPoints[i],
-        offers: this.#tripOffers,
-        destinations: this.#tripDestinations,
-      });
-    }
+    this.#renderTrip();
   }
 
-  #renderItemPoint({point, offers, destinations}) {
+  #renderPoint({point, offers, destinations}) {
     const onEscKeydown = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
@@ -75,5 +69,22 @@ export default class TripPresenter {
     }
 
     render(pointComponent , this.#tripComponent.element);
+  }
+
+  #renderTrip() {
+    render(this.#tripComponent, this.#tripContainer);
+
+    if (!this.#tripPoints.length) {
+      render(new MessageView(messages.newEvent), this.#tripComponent.element);
+      return;
+    }
+
+    for (let i = 0; i < this.#tripPoints.length; i++) {
+      this.#renderPoint({
+        point: this.#tripPoints[i],
+        offers: this.#tripOffers,
+        destinations: this.#tripDestinations,
+      });
+    }
   }
 }

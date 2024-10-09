@@ -12,4 +12,8 @@ const timeFormats = {
   dayHourMinuteTime: 'DD[D] HH[H] mm[M]',
 };
 
-export { dateFormats, timeFormats };
+const messages = {
+  newEvent: 'Click New Event to create your first point',
+};
+
+export { dateFormats, timeFormats, messages };
