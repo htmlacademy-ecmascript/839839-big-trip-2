@@ -10,24 +10,24 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "dateFormats": () => (/* binding */ dateFormats),
-/* harmony export */   "messages": () => (/* binding */ messages),
-/* harmony export */   "timeFormats": () => (/* binding */ timeFormats)
+/* harmony export */   "DateFormat": () => (/* binding */ DateFormat),
+/* harmony export */   "Message": () => (/* binding */ Message),
+/* harmony export */   "TimeFormat": () => (/* binding */ TimeFormat)
 /* harmony export */ });
-const dateFormats = {
-  fullDateTime: 'YYYY-MM-DDTHH:mm',
-  shortDateTime: 'DD/MM/YY HH:mm',
-  fullDate: 'YYYY-MM-DD',
-  shortDate: 'MMM D',
-  time: 'HH:mm'
+const DateFormat = {
+  FULL_DATE_TIME: 'YYYY-MM-DDTHH:mm',
+  SHORT_DATE_TIME: 'DD/MM/YY HH:mm',
+  FULL_DATE: 'YYYY-MM-DD',
+  SHORT_DATE: 'MMM D',
+  TIME: 'HH:mm'
 };
-const timeFormats = {
-  minuteTime: 'mm[M]',
-  hourMinuteTime: 'HH[H] mm[M]',
-  dayHourMinuteTime: 'DD[D] HH[H] mm[M]'
+const TimeFormat = {
+  MINUTE_TIME: 'mm[M]',
+  HOUR_MINUTE_TIME: 'HH[H] mm[M]',
+  DAY_HOUR_MINUTE_TIME: 'DD[D] HH[H] mm[M]'
 };
-const messages = {
-  newEvent: 'Click New Event to create your first point'
+const Message = {
+  NEW_EVENT: 'Click New Event to create your first point'
 };
 
 
@@ -540,21 +540,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const POINT_COUTN = 4;
+const POINT_COUNT = 4;
 class PointModel {
   #points = Array.from({
-    length: POINT_COUTN
+    length: POINT_COUNT
   }, _mock_data_js__WEBPACK_IMPORTED_MODULE_0__.getRandomPoint);
-  #destinations = _mock_description_js__WEBPACK_IMPORTED_MODULE_1__.mockDestinations;
-  #offers = _mock_offers_js__WEBPACK_IMPORTED_MODULE_2__.mockOffers;
+  #allDestinations = _mock_description_js__WEBPACK_IMPORTED_MODULE_1__.mockDestinations;
+  #allOffers = _mock_offers_js__WEBPACK_IMPORTED_MODULE_2__.mockOffers;
   get point() {
     return this.#points;
   }
   get destination() {
-    return this.#destinations;
+    return this.#allDestinations;
   }
   get offer() {
-    return this.#offers;
+    return this.#allOffers;
   }
 }
 
@@ -586,7 +586,7 @@ __webpack_require__.r(__webpack_exports__);
 class TripPresenter {
   #tripContainer = null;
   #pointModel = null;
-  #tripComponent = new _view_list_points_view_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
+  #listPointsComponent = new _view_list_points_view_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
   #tripPoints = [];
   #tripDestinations = [];
   #tripOffers = [];
@@ -608,8 +608,8 @@ class TripPresenter {
   }
   #renderPoint({
     point,
-    offers,
-    destinations
+    allOffers,
+    allDestinations
   }) {
     const onEscKeydown = evt => {
       if (evt.key === 'Escape') {
@@ -620,43 +620,43 @@ class TripPresenter {
     };
     const pointComponent = new _view_item_point_view_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
       point,
-      offers,
-      destinations,
+      allOffers,
+      allDestinations,
       onRollupClick: () => {
         replacePointToOpenPoint();
         document.addEventListener('keydown', onEscKeydown);
       }
     });
-    const openPointComponen = new _view_open_point_view_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
+    const openPointComponent = new _view_open_point_view_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
       point,
-      offers,
-      destinations,
+      allOffers,
+      allDestinations,
       onFormClick: () => {
         replaceOpenPointToPoint();
         document.removeEventListener('keydown', onEscKeydown);
       }
     });
     function replacePointToOpenPoint() {
-      (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_4__.replace)(openPointComponen, pointComponent);
+      (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_4__.replace)(openPointComponent, pointComponent);
     }
     function replaceOpenPointToPoint() {
-      (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_4__.replace)(pointComponent, openPointComponen);
+      (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_4__.replace)(pointComponent, openPointComponent);
     }
-    (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_4__.render)(pointComponent, this.#tripComponent.element);
+    (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_4__.render)(pointComponent, this.#listPointsComponent.element);
   }
   #renderTrip() {
-    (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_4__.render)(this.#tripComponent, this.#tripContainer);
+    (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_4__.render)(this.#listPointsComponent, this.#tripContainer);
     if (!this.#tripPoints.length) {
-      (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_4__.render)(new _view_message_view_js__WEBPACK_IMPORTED_MODULE_3__["default"](_const_js__WEBPACK_IMPORTED_MODULE_5__.messages.newEvent), this.#tripComponent.element);
+      (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_4__.render)(new _view_message_view_js__WEBPACK_IMPORTED_MODULE_3__["default"](_const_js__WEBPACK_IMPORTED_MODULE_5__.Message.NEW_EVENT), this.#listPointsComponent.element);
       return;
     }
-    for (let i = 0; i < this.#tripPoints.length; i++) {
+    this.#tripPoints.forEach(point => {
       this.#renderPoint({
-        point: this.#tripPoints[i],
-        offers: this.#tripOffers,
-        destinations: this.#tripDestinations
+        point,
+        allOffers: this.#tripOffers,
+        allDestinations: this.#tripDestinations
       });
-    }
+    });
   }
 }
 
@@ -679,17 +679,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./const.js */ "./src/const.js");
 
 
+const Period = {
+  HOUR: 60,
+  DAY: 1440
+};
 const formatDate = (date, format) => date ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(date).format(format) : '';
 const getTimeDifference = (dateStart, dateEnd) => {
   const difference = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(dateEnd).diff(dateStart, 'minute');
-  if (difference < 60) {
-    return dayjs__WEBPACK_IMPORTED_MODULE_0___default()(difference).format(_const_js__WEBPACK_IMPORTED_MODULE_1__.timeFormats.minuteTime);
+  if (difference < Period.HOUR) {
+    return dayjs__WEBPACK_IMPORTED_MODULE_0___default()(difference).format(_const_js__WEBPACK_IMPORTED_MODULE_1__.TimeFormat.MINUTE_TIME);
   }
-  if (difference > 60 && difference < 1440) {
-    return dayjs__WEBPACK_IMPORTED_MODULE_0___default()(difference).format(_const_js__WEBPACK_IMPORTED_MODULE_1__.timeFormats.hourMinuteTime);
+  if (difference > Period.HOUR && difference < Period.DAY) {
+    return dayjs__WEBPACK_IMPORTED_MODULE_0___default()(difference).format(_const_js__WEBPACK_IMPORTED_MODULE_1__.TimeFormat.HOUR_MINUTE_TIME);
   }
-  if (difference > 1440) {
-    return dayjs__WEBPACK_IMPORTED_MODULE_0___default()(difference).format(_const_js__WEBPACK_IMPORTED_MODULE_1__.timeFormats.dayHourMinuteTime);
+  if (difference > Period.DAY) {
+    return dayjs__WEBPACK_IMPORTED_MODULE_0___default()(difference).format(_const_js__WEBPACK_IMPORTED_MODULE_1__.TimeFormat.DAY_HOUR_MINUTE_TIME);
   }
 };
 
@@ -757,7 +761,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const createItemPoint = (point, offers, destinations) => {
+const createItemPoint = (point, allOffers, allDestinations) => {
   const {
     type,
     basePrice,
@@ -765,22 +769,22 @@ const createItemPoint = (point, offers, destinations) => {
     dateTo,
     isFavorite
   } = point;
-  const pointDestination = destinations.find(dest => dest.id === point.destination);
+  const pointDestination = allDestinations.find(dest => dest.id === point.destination);
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
-  const listOffers = offers.find(offer => type === offer.type).offers;
-  const selectedOffers = listOffers.filter(offer => point.offers.includes(offer.id));
+  const allOffersByType = allOffers.find(offer => type === offer.type).offers;
+  const selectedOffers = allOffersByType.filter(offer => point.offers.includes(offer.id));
   return `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.fullDate)}">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.shortDate)}</time>
+        <time class="event__date" datetime="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.DateFormat.FULL_DATE)}">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.DateFormat.SHORT_DATE)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${pointDestination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.fullDateTime)}">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.time)}</time>
+            <time class="event__start-time" datetime="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.DateFormat.FULL_DATE_TIME)}">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.DateFormat.TIME)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateTo, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.fullDateTime)}">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateTo, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.time)}</time>
+            <time class="event__end-time" datetime="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateTo, _const_js__WEBPACK_IMPORTED_MODULE_2__.DateFormat.FULL_DATE_TIME)}">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateTo, _const_js__WEBPACK_IMPORTED_MODULE_2__.DateFormat.TIME)}</time>
           </p>
           <p class="event__duration">${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.getTimeDifference)(dateFrom, dateTo)}</p>
         </div>
@@ -811,24 +815,24 @@ const createItemPoint = (point, offers, destinations) => {
 };
 class ItemPointView extends _framework_view_abstract_view_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   #point = null;
-  #offers = null;
-  #destinations = null;
+  #allOffers = null;
+  #allDestinations = null;
   #hendleRollupClick = null;
   constructor({
     point,
-    offers,
-    destinations,
+    allOffers,
+    allDestinations,
     onRollupClick
   }) {
     super();
     this.#point = point;
-    this.#offers = offers;
-    this.#destinations = destinations;
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
     this.#hendleRollupClick = onRollupClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onRollupClick);
   }
   get template() {
-    return createItemPoint(this.#point, this.#offers, this.#destinations);
+    return createItemPoint(this.#point, this.#allOffers, this.#allDestinations);
   }
   #onRollupClick = evt => {
     evt.preventDefault();
@@ -905,13 +909,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const isChecked = (offer, selectedOffers) => selectedOffers.includes(offer) ? 'checked' : '';
-const getListOffers = (offers, selectedOffers) => offers.length ? `<section class="event__section  event__section--offers">
+const getListOffers = (allOffersByType, selectedOffers) => allOffersByType.length ? `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-          ${offers.map(offer => `
+          ${allOffersByType.map(offer => `
             <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isChecked(offer, selectedOffers)}>
-              <label class="event__offer-label" for="event-offer-luggage-1">
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${isChecked(offer, selectedOffers)}>
+              <label class="event__offer-label" for="event-offer-${offer.id}">
                 <span class="event__offer-title">${offer.title}</span>
                 +€&nbsp;
                 <span class="event__offer-price">${offer.price}</span>
@@ -927,16 +931,16 @@ const getPhotoContainer = pictures => pictures.length ? `<div class="event__phot
         `).join('')}
     </div>
   </div>` : '';
-const createOpenPoint = (point, offers, destinations) => {
+const createOpenPoint = (point, allOffers, allDestinations) => {
   const {
     type,
     dateFrom,
     dateTo,
     basePrice
   } = point;
-  const listOffers = offers.find(offer => type === offer.type).offers;
-  const poinDestination = destinations.find(dest => point.destination === dest.id);
-  const selectedOffers = listOffers.filter(offer => point.offers.includes(offer.id));
+  const allOffersByType = allOffers.find(offer => type === offer.type).offers;
+  const poinDestination = allDestinations.find(dest => point.destination === dest.id);
+  const selectedOffers = allOffersByType.filter(offer => point.offers.includes(offer.id));
   return `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
         <header class="event__header">
@@ -951,50 +955,11 @@ const createOpenPoint = (point, offers, destinations) => {
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
 
-                <div class="event__type-item">
-                  <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-                  <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-                </div>
+                  ${allOffers.map(offer => `<div class="event__type-item">
+                    <input id="event-type-${offer.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer.type}" checked>
+                    <label class="event__type-label  event__type-label--${offer.type}" for="event-type-${offer.type}-1">${offer.type.charAt(0).toUpperCase() + offer.type.slice(1)}</label>
+                  </div>`).join('')}
 
-                <div class="event__type-item">
-                  <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-                  <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-                  <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-                  <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-                  <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-                  <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                  <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                  <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-                  <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-                </div>
               </fieldset>
             </div>
           </div>
@@ -1005,18 +970,16 @@ const createOpenPoint = (point, offers, destinations) => {
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${poinDestination.name}" list="destination-list-1">
             <datalist id="destination-list-1">
-              <option value="Amsterdam"></option>
-              <option value="Geneva"></option>
-              <option value="Chamonix"></option>
+            ${allDestinations.map(dest => `<option value="${dest.name}"></option>`).join('')}
             </datalist>
           </div>
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.shortDateTime)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateFrom, _const_js__WEBPACK_IMPORTED_MODULE_2__.DateFormat.SHORT_DATE_TIME)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateTo, _const_js__WEBPACK_IMPORTED_MODULE_2__.dateFormats.shortDateTime)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${(0,_utils_js__WEBPACK_IMPORTED_MODULE_1__.formatDate)(dateTo, _const_js__WEBPACK_IMPORTED_MODULE_2__.DateFormat.SHORT_DATE_TIME)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -1034,7 +997,7 @@ const createOpenPoint = (point, offers, destinations) => {
           </button>
         </header>
         <section class="event__details">
-          ${getListOffers(listOffers, selectedOffers)}
+          ${getListOffers(allOffersByType, selectedOffers)}
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -1048,25 +1011,25 @@ const createOpenPoint = (point, offers, destinations) => {
 };
 class OpenPointView extends _framework_view_abstract_view_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   #point = null;
-  #offers = null;
-  #destinations = null;
+  #allOffers = null;
+  #allDestinations = null;
   #hendleButtonClick = null;
   constructor({
     point,
-    offers,
-    destinations,
+    allOffers,
+    allDestinations,
     onFormClick
   }) {
     super();
     this.#point = point;
-    this.#offers = offers;
-    this.#destinations = destinations;
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
     this.#hendleButtonClick = onFormClick;
     this.element.querySelector('form').addEventListener('submit', this.#onSaveClick);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onDeleteClick);
   }
   get template() {
-    return createOpenPoint(this.#point, this.#offers, this.#destinations);
+    return createOpenPoint(this.#point, this.#allOffers, this.#allDestinations);
   }
   #onSaveClick = evt => {
     evt.preventDefault();
@@ -1755,4 +1718,4 @@ tripPresenter.init();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle.8aebe633f894f6486761.js.map
+//# sourceMappingURL=bundle.2d2b0a3fbc9d5b3152d1.js.map
