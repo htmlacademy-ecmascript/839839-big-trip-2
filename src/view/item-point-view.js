@@ -1,28 +1,28 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { formatDate, getTimeDifference } from '../utils.js';
-import { dateFormats } from '../const.js';
+import { DateFormat } from '../const.js';
 
-const createItemPoint = (point, offers, destinations) => {
+const createItemPoint = (point, allOffers, allDestinations) => {
   const {type, basePrice, dateFrom, dateTo, isFavorite} = point;
 
-  const pointDestination = destinations.find((dest) => dest.id === point.destination);
+  const pointDestination = allDestinations.find((dest) => dest.id === point.destination);
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
-  const listOffers = offers.find((offer) => type === offer.type).offers;
-  const selectedOffers = listOffers.filter((offer) => point.offers.includes(offer.id));
+  const allOffersByType = allOffers.find((offer) => type === offer.type).offers;
+  const selectedOffers = allOffersByType.filter((offer) => point.offers.includes(offer.id));
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${formatDate(dateFrom, dateFormats.fullDate)}">${formatDate(dateFrom, dateFormats.shortDate)}</time>
+        <time class="event__date" datetime="${formatDate(dateFrom, DateFormat.FULL_DATE)}">${formatDate(dateFrom, DateFormat.SHORT_DATE)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${pointDestination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${formatDate(dateFrom, dateFormats.fullDateTime)}">${formatDate(dateFrom, dateFormats.time)}</time>
+            <time class="event__start-time" datetime="${formatDate(dateFrom, DateFormat.FULL_DATE_TIME)}">${formatDate(dateFrom, DateFormat.TIME)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${formatDate(dateTo, dateFormats.fullDateTime)}">${formatDate(dateTo, dateFormats.time)}</time>
+            <time class="event__end-time" datetime="${formatDate(dateTo, DateFormat.FULL_DATE_TIME)}">${formatDate(dateTo, DateFormat.TIME)}</time>
           </p>
           <p class="event__duration">${getTimeDifference(dateFrom, dateTo)}</p>
         </div>
@@ -52,25 +52,29 @@ const createItemPoint = (point, offers, destinations) => {
     </li>`);
 };
 
-export default class ItemPointView {
-  constructor({point, offers, destinations}) {
-    this.point = point;
-    this.offers = offers;
-    this.destinations = destinations;
+export default class ItemPointView extends AbstractView {
+  #point = null;
+  #allOffers = null;
+  #allDestinations = null;
+  #hendleRollupClick = null;
+
+  constructor({point, allOffers, allDestinations, onRollupClick}) {
+    super();
+    this.#point = point;
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
+    this.#hendleRollupClick = onRollupClick;
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#onRollupClick);
   }
 
-  getTemplate() {
-    return createItemPoint(this.point, this.offers, this.destinations);
+  get template() {
+    return createItemPoint(this.#point, this.#allOffers, this.#allDestinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #onRollupClick = (evt) => {
+    evt.preventDefault();
+    this.#hendleRollupClick();
+  };
 }
