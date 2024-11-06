@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
-import { TimeFormat } from './const.js';
+import { DateFormat, TimeFormat } from '../const.js';
 
 const Period = {
   HOUR: 60,
   DAY: 1440
 };
 
-const formatDate = (date, format) =>
+const formatDate = (date, format = DateFormat.SHORT_DATE_TIME) =>
   date ? dayjs(date).format(format) : '';
 
 const getTimeDifference = (dateStart, dateEnd) => {
