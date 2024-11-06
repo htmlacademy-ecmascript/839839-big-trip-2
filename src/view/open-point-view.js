@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formatDate } from '../utils.js';
+import { formatDate } from '../utils/utils.js';
 import { DateFormat } from '../const.js';
 
 const isChecked = (offer, selectedOffers) => selectedOffers.includes(offer) ? 'checked' : '';

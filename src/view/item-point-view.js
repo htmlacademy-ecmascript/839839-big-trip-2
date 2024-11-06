@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formatDate, getTimeDifference } from '../utils.js';
+import { formatDate, getTimeDifference } from '../utils/utils.js';
 import { DateFormat } from '../const.js';
 
 const createItemPoint = (point, allOffers, allDestinations) => {
