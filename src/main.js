@@ -4,6 +4,7 @@ import SortView from './view/sort-view.js';
 import { render, RenderPosition } from './framework/render.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import PointModel from './model/point-model.js';
+import { generateFilter } from './utils/filter.js';
 
 const tripMainElement = document.querySelector('.trip-main');
 const filtersElement = document.querySelector('.trip-controls__filters');
@@ -16,8 +17,10 @@ const tripPresenter = new TripPresenter({
   pointModel
 });
 
+const filters = generateFilter(pointModel.point);
+
 render(new RouteView(), tripMainElement, RenderPosition.AFTERBEGIN);
-render(new FiltersView(), filtersElement);
+render(new FiltersView({filters}), filtersElement);
 render(new SortView(), tripEventsElement);
 
 tripPresenter.init();
