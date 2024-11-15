@@ -1,3 +1,10 @@
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+};
+
 const DateFormat = {
   FULL_DATE_TIME: 'YYYY-MM-DDTHH:mm',
   SHORT_DATE_TIME: 'DD/MM/YY HH:mm',
@@ -16,4 +23,4 @@ const Message = {
   NEW_EVENT: 'Click New Event to create your first point',
 };
 
-export { DateFormat, TimeFormat, Message };
+export { DateFormat, TimeFormat, Message, FilterType };
