@@ -31,6 +31,13 @@ export default class TripPresenter {
     this.#renderTrip();
   }
 
+  /**
+   * Рендеринг отдельной точки поездки.
+   *
+   * @param {Object} point - Данные точки.
+   * @param {Array} allOffers - Все предложения.
+   * @param {Array} allDestinations - Все направления.
+   */
   #renderPoint({point, allOffers, allDestinations}) {
     const onEscKeydown = (evt) => {
       if (evt.key === 'Escape') {
@@ -40,6 +47,15 @@ export default class TripPresenter {
       }
     };
 
+    /**
+     * Создает новый компонент закрытой точки.
+     *
+     * @param {Object} point - Данные для текущей точки.
+     * @param {Array} allOffers - Список всех предложений.
+     * @param {Array} allDestinations - Список всех направлений.
+     * @param {Function} onRollupClick - Обработчик клика по элементу, который
+     *        заменяет компонент точки на открытый и добавляет обработчик события клавиатуры.
+     */
     const pointComponent = new ItemPointView({
       point,
       allOffers,
@@ -50,6 +66,16 @@ export default class TripPresenter {
       }
     });
 
+    /**
+     * Создает новый компонент открытой точки.
+     *
+     * @param {Object} point - Данные для текущей точки.
+     * @param {Array} allOffers - Список всех предложений.
+     * @param {Array} allDestinations - Список всех направлений.
+     * @param {Function} onFormClick - Обработчик клика по форме,
+     *        который заменяет открытый компонент на обычный и удаляет обработчик
+     *        события клавиатуры.
+     */
     const openPointComponent = new OpenPointView({
       point,
       allOffers,
@@ -60,10 +86,16 @@ export default class TripPresenter {
       }
     });
 
+    /**
+     * Заменяет компонент открытой точки (openPointComponent) на компонент точки (pointComponent).
+     */
     function replacePointToOpenPoint() {
       replace(openPointComponent, pointComponent);
     }
 
+    /**
+     * Заменяет компонент точки (pointComponent) на компонент открытой точки (openPointComponent).
+     */
     function replaceOpenPointToPoint() {
       replace(pointComponent, openPointComponent);
     }
@@ -71,6 +103,9 @@ export default class TripPresenter {
     render(pointComponent , this.#listPointsComponent.element);
   }
 
+  /**
+   * Рендеринг всего списка поездок.
+   */
   #renderTrip() {
     render(this.#listPointsComponent, this.#tripContainer);
 
