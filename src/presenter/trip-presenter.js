@@ -87,14 +87,14 @@ export default class TripPresenter {
     });
 
     /**
-     * Заменяет компонент открытой точки (openPointComponent) на компонент точки (pointComponent).
+     * Заменяет компонент точки (pointComponent) на компонент открытой точки (openPointComponent).
      */
     function replacePointToOpenPoint() {
       replace(openPointComponent, pointComponent);
     }
 
     /**
-     * Заменяет компонент точки (pointComponent) на компонент открытой точки (openPointComponent).
+     * Заменяет компонент открытой точки (openPointComponent) на компонент точки (pointComponent).
      */
     function replaceOpenPointToPoint() {
       replace(pointComponent, openPointComponent);
