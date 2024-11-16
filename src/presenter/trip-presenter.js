@@ -1,9 +1,8 @@
 import ListPointsView from '../view/list-points-view.js';
-import ItemPointView from '../view/item-point-view.js';
-import OpenPointView from '../view/open-point-view.js';
 import MessageView from '../view/message-view.js';
-import { render, replace } from '../framework/render.js';
+import { render } from '../framework/render.js';
 import { Message } from '../const.js';
+import PointPresenter from './point-presenter.js';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -39,68 +38,10 @@ export default class TripPresenter {
    * @param {Array} allDestinations - Все направления.
    */
   #renderPoint({point, allOffers, allDestinations}) {
-    const onEscKeydown = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceOpenPointToPoint();
-        document.removeEventListener('keydown', onEscKeydown);
-      }
-    };
-
-    /**
-     * Создает новый компонент закрытой точки.
-     *
-     * @param {Object} point - Данные для текущей точки.
-     * @param {Array} allOffers - Список всех предложений.
-     * @param {Array} allDestinations - Список всех направлений.
-     * @param {Function} onRollupClick - Обработчик клика по элементу, который
-     *        заменяет компонент точки на открытый и добавляет обработчик события клавиатуры.
-     */
-    const pointComponent = new ItemPointView({
-      point,
-      allOffers,
-      allDestinations,
-      onRollupClick: () => {
-        replacePointToOpenPoint();
-        document.addEventListener('keydown', onEscKeydown);
-      }
+    const pointPresenter = new PointPresenter({
+      listPointsContainer: this.#listPointsComponent.element
     });
-
-    /**
-     * Создает новый компонент открытой точки.
-     *
-     * @param {Object} point - Данные для текущей точки.
-     * @param {Array} allOffers - Список всех предложений.
-     * @param {Array} allDestinations - Список всех направлений.
-     * @param {Function} onFormClick - Обработчик клика по форме,
-     *        который заменяет открытый компонент на обычный и удаляет обработчик
-     *        события клавиатуры.
-     */
-    const openPointComponent = new OpenPointView({
-      point,
-      allOffers,
-      allDestinations,
-      onFormClick: () => {
-        replaceOpenPointToPoint();
-        document.removeEventListener('keydown', onEscKeydown);
-      }
-    });
-
-    /**
-     * Заменяет компонент точки (pointComponent) на компонент открытой точки (openPointComponent).
-     */
-    function replacePointToOpenPoint() {
-      replace(openPointComponent, pointComponent);
-    }
-
-    /**
-     * Заменяет компонент открытой точки (openPointComponent) на компонент точки (pointComponent).
-     */
-    function replaceOpenPointToPoint() {
-      replace(pointComponent, openPointComponent);
-    }
-
-    render(pointComponent , this.#listPointsComponent.element);
+    pointPresenter.init(point, allOffers, allDestinations);
   }
 
   /**
