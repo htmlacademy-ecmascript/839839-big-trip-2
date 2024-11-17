@@ -1,8 +1,9 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formatDate } from '../utils.js';
+import { formatDate } from '../utils/utils.js';
 import { DateFormat } from '../const.js';
 
 const isChecked = (offer, selectedOffers) => selectedOffers.includes(offer) ? 'checked' : '';
+const isCheckedType = (pointType, offerType) => pointType === offerType ? 'checked' : '';
 
 const getListOffers = (allOffersByType, selectedOffers) =>
   allOffersByType.length ?
@@ -55,7 +56,7 @@ const createOpenPoint = (point, allOffers, allDestinations) => {
                 <legend class="visually-hidden">Event type</legend>
 
                   ${allOffers.map((offer) => `<div class="event__type-item">
-                    <input id="event-type-${offer.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer.type}" checked>
+                    <input id="event-type-${offer.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer.type}" ${isCheckedType(point.type, offer.type)}>
                     <label class="event__type-label  event__type-label--${offer.type}" for="event-type-${offer.type}-1">${offer.type.charAt(0).toUpperCase() + offer.type.slice(1)}</label>
                   </div>`).join('')}
 
