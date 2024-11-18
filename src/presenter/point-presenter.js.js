@@ -4,20 +4,27 @@ import OpenPointView from '../view/open-point-view';
 
 export default class PointPresenter {
   #listPointsComponent = null;
+  #allOffers = null;
+  #allDestinations = null;
+
+  #point = null;
 
   #pointComponent = null;
   #openPointComponent = null;
 
-  constructor({listPointsContainer}) {
+  constructor({listPointsContainer, allOffers, allDestinations}) {
     this.#listPointsComponent = listPointsContainer;
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
   }
 
-  init(point, allOffers, allDestinations) {
+  init(point) {
+    this.#point = point;
 
     this.#pointComponent = new ItemPointView({
-      point,
-      allOffers,
-      allDestinations,
+      point: this.#point,
+      allOffers : this.#allOffers,
+      allDestinations : this.#allDestinations,
       onRollupClick: () => {
         this.#replacePointToOpenPoint();
         document.addEventListener('keydown', this.#onEscKeydown);
@@ -25,9 +32,9 @@ export default class PointPresenter {
     });
 
     this.#openPointComponent = new OpenPointView({
-      point,
-      allOffers,
-      allDestinations,
+      point: this.#point,
+      allOffers : this.#allOffers,
+      allDestinations : this.#allDestinations,
       onFormClick: () => {
         this.#replaceOpenPointToPoint();
         document.removeEventListener('keydown', this.#onEscKeydown);
