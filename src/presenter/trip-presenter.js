@@ -80,10 +80,18 @@ export default class TripPresenter {
       listPointsContainer: this.#listPointsComponent.element,
       allOffers: this.#tripOffers,
       allDestinations: this.#tripDestinations,
+      onModeChange: this.#handleModeChange
     });
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
   }
+
+  /**
+   * Сбрасывает представление всех точек.
+   */
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
 
   /**
    * Рендеринг всего списка поездок.
