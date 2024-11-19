@@ -70,10 +70,7 @@ export default class TripPresenter {
 
   /**
    * Рендеринг отдельной точки поездки.
-   *
    * @param {Object} point - Данные точки.
-   * @param {Array} allOffers - Все предложения.
-   * @param {Array} allDestinations - Все направления.
    */
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
