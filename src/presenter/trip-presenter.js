@@ -55,7 +55,7 @@ export default class TripPresenter {
    * Рендеринг сортировки.
    */
   #renderSort() {
-    render(this.#sortComponent, this.#sortContainer);
+    render(this.#sortComponent, this.#sortContainer, RenderPosition.AFTERBEGIN);
   }
 
   /**
@@ -73,11 +73,11 @@ export default class TripPresenter {
    * @param {Array} allOffers - Все предложения.
    * @param {Array} allDestinations - Все направления.
    */
-  #renderPoint({point, allOffers, allDestinations}) {
+  #renderPoint(point) {
     const pointPresenter = new PointPresenter({
       listPointsContainer: this.#listPointsComponent.element,
-      allOffers,
-      allDestinations,
+      allOffers: this.#tripOffers,
+      allDestinations: this.#tripDestinations,
     });
     pointPresenter.init(point);
   }
@@ -87,7 +87,6 @@ export default class TripPresenter {
    */
   #renderTrip() {
     this.#renderRoute();
-    this.#renderSort();
     this.#renderFilter();
     render(this.#listPointsComponent, this.#tripContainer);
 
@@ -96,12 +95,9 @@ export default class TripPresenter {
       return;
     }
 
+    this.#renderSort();
     this.#tripPoints.forEach((point) => {
-      this.#renderPoint({
-        point,
-        allOffers: this.#tripOffers,
-        allDestinations: this.#tripDestinations,
-      });
+      this.#renderPoint(point);
     });
   }
 }
