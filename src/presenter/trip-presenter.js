@@ -7,6 +7,7 @@ import MessageView from '../view/message-view.js';
 import { Message } from '../const.js';
 import PointPresenter from './point-presenter.js';
 import { generateFilter } from '../utils/filter.js';
+import { updateItem } from '../utils/utils.js';
 
 
 export default class TripPresenter {
@@ -67,6 +68,16 @@ export default class TripPresenter {
     const filters = generateFilter(this.#pointModel.point);
     render(new FiltersView({filters}), this.#filterContainer);
   }
+
+  /**
+   * Обновляет информацию о точке в списке поездок и
+   * перерисовывает соответствующее представление точки.
+   * @param {Object} updatedPoint - Обновленные данные точки.
+   */
+  #handlePointChange = (updatedPoint) => {
+    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
 
   /**
    * Рендеринг отдельной точки поездки.
