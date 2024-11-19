@@ -84,6 +84,15 @@ export default class TripPresenter {
   }
 
   /**
+   * Удаляет все представления точек из DOM и
+   * очищает коллекцию хранящихся экземпляров PointPresenter.
+   */
+  #clearlistPoints() {
+    this.#pointPresenters.forEach((presenter) => presenter.removePoint());
+    this.#pointPresenters.clear();
+  }
+
+  /**
    * Изменяет представление точек путешествия.
    */
   #handleModeChange = () => {
