@@ -88,7 +88,8 @@ export default class TripPresenter {
       listPointsContainer: this.#listPointsComponent.element,
       allOffers: this.#tripOffers,
       allDestinations: this.#tripDestinations,
-      onModeChange: this.#handleModeChange
+      onModeChange: this.#handleModeChange,
+      onDataChange: this.#handlePointChange
     });
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);

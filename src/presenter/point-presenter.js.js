@@ -12,6 +12,7 @@ export default class PointPresenter {
   #allOffers = null;
   #allDestinations = null;
   #handleModeChange = null;
+  #handleDataChange = null;
 
   #point = null;
   #mode = Mode.DEFAULT;
@@ -19,11 +20,12 @@ export default class PointPresenter {
   #pointComponent = null;
   #openPointComponent = null;
 
-  constructor({listPointsContainer, allOffers, allDestinations, onModeChange}) {
+  constructor({listPointsContainer, allOffers, allDestinations, onModeChange, onDataChange}) {
     this.#listPointsComponent = listPointsContainer;
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
     this.#handleModeChange = onModeChange;
+    this.#handleDataChange = onDataChange;
   }
 
   init(point) {
@@ -36,18 +38,15 @@ export default class PointPresenter {
       point: this.#point,
       allOffers : this.#allOffers,
       allDestinations : this.#allDestinations,
-      onRollupClick: () => {
-        this.#replacePointToOpenPoint();
-      }
+      onRollupClick: this.#handleRollupClick,
+      onFavoriteClick: this.#handleFavoriteClick
     });
 
     this.#openPointComponent = new OpenPointView({
       point: this.#point,
       allOffers : this.#allOffers,
       allDestinations : this.#allDestinations,
-      onFormClick: () => {
-        this.#replaceOpenPointToPoint();
-      }
+      onFormClick: this.#handleFormClick
     });
 
     if (prevPointComponent === null || prevOpenPointComponent === null) {
@@ -114,4 +113,20 @@ export default class PointPresenter {
     this.#mode = Mode.DEFAULT;
   }
 
+  #handleRollupClick = () => {
+    this.#replacePointToOpenPoint();
+  };
+
+  #handleFormClick = () => {
+    this.#replaceOpenPointToPoint();
+  };
+
+  #handleFavoriteClick = () => {
+    this.#handleDataChange(
+      {
+        ...this.#point,
+        isFavorite: !this.#point.isFavorite
+      }
+    );
+  };
 }
