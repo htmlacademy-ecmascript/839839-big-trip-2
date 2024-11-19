@@ -1,23 +1,39 @@
+import RouteView from '../view/route-view.js';
+import FiltersView from '../view/filters-view.js';
+import SortView from '../view/sort-view.js';
+import { render, RenderPosition } from '../framework/render.js';
 import ListPointsView from '../view/list-points-view.js';
-import ItemPointView from '../view/item-point-view.js';
-import OpenPointView from '../view/open-point-view.js';
 import MessageView from '../view/message-view.js';
-import { render, replace } from '../framework/render.js';
 import { Message } from '../const.js';
+import PointPresenter from './point-presenter.js';
+import { generateFilter } from '../utils/filter.js';
+import { updateItem } from '../utils/utils.js';
+
 
 export default class TripPresenter {
   #tripContainer = null;
   #pointModel = null;
+  #routeContainer = null;
+  #filterContainer = null;
+  #sortContainer = null;
 
-  #listPointsComponent = new ListPointsView;
+  #listPointsComponent = new ListPointsView();
+  #routeComponent = new RouteView();
+  #sortComponent = new SortView();
 
   #tripPoints = [];
   #tripDestinations = [];
   #tripOffers = [];
 
-  constructor({ tripContainer, pointModel }) {
+  #pointPresenters = new Map();
+
+  constructor({ tripContainer, pointModel, tripMainElement, filtersElement,
+    tripEventsElement }) {
     this.#tripContainer = tripContainer;
     this.#pointModel = pointModel;
+    this.#routeContainer = tripMainElement;
+    this.#filterContainer = filtersElement;
+    this.#sortContainer = tripEventsElement;
   }
 
   init() {
@@ -32,81 +48,75 @@ export default class TripPresenter {
   }
 
   /**
-   * Рендеринг отдельной точки поездки.
-   *
-   * @param {Object} point - Данные точки.
-   * @param {Array} allOffers - Все предложения.
-   * @param {Array} allDestinations - Все направления.
+   * Рендеринг маршрута.
    */
-  #renderPoint({point, allOffers, allDestinations}) {
-    const onEscKeydown = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceOpenPointToPoint();
-        document.removeEventListener('keydown', onEscKeydown);
-      }
-    };
-
-    /**
-     * Создает новый компонент закрытой точки.
-     *
-     * @param {Object} point - Данные для текущей точки.
-     * @param {Array} allOffers - Список всех предложений.
-     * @param {Array} allDestinations - Список всех направлений.
-     * @param {Function} onRollupClick - Обработчик клика по элементу, который
-     *        заменяет компонент точки на открытый и добавляет обработчик события клавиатуры.
-     */
-    const pointComponent = new ItemPointView({
-      point,
-      allOffers,
-      allDestinations,
-      onRollupClick: () => {
-        replacePointToOpenPoint();
-        document.addEventListener('keydown', onEscKeydown);
-      }
-    });
-
-    /**
-     * Создает новый компонент открытой точки.
-     *
-     * @param {Object} point - Данные для текущей точки.
-     * @param {Array} allOffers - Список всех предложений.
-     * @param {Array} allDestinations - Список всех направлений.
-     * @param {Function} onFormClick - Обработчик клика по форме,
-     *        который заменяет открытый компонент на обычный и удаляет обработчик
-     *        события клавиатуры.
-     */
-    const openPointComponent = new OpenPointView({
-      point,
-      allOffers,
-      allDestinations,
-      onFormClick: () => {
-        replaceOpenPointToPoint();
-        document.removeEventListener('keydown', onEscKeydown);
-      }
-    });
-
-    /**
-     * Заменяет компонент точки (pointComponent) на компонент открытой точки (openPointComponent).
-     */
-    function replacePointToOpenPoint() {
-      replace(openPointComponent, pointComponent);
-    }
-
-    /**
-     * Заменяет компонент открытой точки (openPointComponent) на компонент точки (pointComponent).
-     */
-    function replaceOpenPointToPoint() {
-      replace(pointComponent, openPointComponent);
-    }
-
-    render(pointComponent , this.#listPointsComponent.element);
+  #renderRoute() {
+    render(this.#routeComponent, this.#routeContainer, RenderPosition.AFTERBEGIN);
   }
+
+  /**
+   * Рендеринг сортировки.
+   */
+  #renderSort() {
+    render(this.#sortComponent, this.#sortContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  /**
+   * Рендеринг фильтров.
+   */
+  #renderFilter() {
+    const filters = generateFilter(this.#pointModel.point);
+    render(new FiltersView({filters}), this.#filterContainer);
+  }
+
+  /**
+   * Обновляет информацию о точке в списке поездок и
+   * перерисовывает соответствующее представление точки.
+   * @param {Object} updatedPoint - Обновленные данные точки.
+   */
+  #handlePointChange = (updatedPoint) => {
+    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  /**
+   * Рендеринг отдельной точки поездки.
+   * @param {Object} point - Данные точки.
+   */
+  #renderPoint(point) {
+    const pointPresenter = new PointPresenter({
+      listPointsContainer: this.#listPointsComponent.element,
+      allOffers: this.#tripOffers,
+      allDestinations: this.#tripDestinations,
+      onModeChange: this.#handleModeChange,
+      onDataChange: this.#handlePointChange
+    });
+    pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter);
+  }
+
+  /**
+   * Удаляет все представления точек из DOM и
+   * очищает коллекцию хранящихся экземпляров PointPresenter.
+   */
+  #clearlistPoints() {
+    this.#pointPresenters.forEach((presenter) => presenter.removePoint());
+    this.#pointPresenters.clear();
+  }
+
+  /**
+   * Изменяет представление точек путешествия.
+   */
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
 
   /**
    * Рендеринг всего списка поездок.
    */
   #renderTrip() {
+    this.#renderRoute();
+    this.#renderFilter();
     render(this.#listPointsComponent, this.#tripContainer);
 
     if (!this.#tripPoints.length) {
@@ -114,12 +124,10 @@ export default class TripPresenter {
       return;
     }
 
+    this.#renderSort();
+
     this.#tripPoints.forEach((point) => {
-      this.#renderPoint({
-        point,
-        allOffers: this.#tripOffers,
-        allDestinations: this.#tripDestinations,
-      });
+      this.#renderPoint(point);
     });
   }
 }
