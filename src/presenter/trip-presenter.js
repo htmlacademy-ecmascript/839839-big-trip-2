@@ -24,6 +24,8 @@ export default class TripPresenter {
   #tripDestinations = [];
   #tripOffers = [];
 
+  #pointPresenters = new Map();
+
   constructor({ tripContainer, pointModel, tripMainElement, filtersElement,
     tripEventsElement }) {
     this.#tripContainer = tripContainer;
@@ -80,6 +82,7 @@ export default class TripPresenter {
       allDestinations: this.#tripDestinations,
     });
     pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 
   /**
