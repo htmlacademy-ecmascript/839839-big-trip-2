@@ -65,7 +65,14 @@ export default class PointPresenter {
 
     remove(prevPointComponent);
     remove(prevOpenPointComponent);
+  }
 
+  /**
+   * Удаляет компоненты закрытой и открытой точки из DOM.
+   */
+  removePoint() {
+    remove(this.#pointComponent);
+    remove(this.#openPointComponent);
   }
 
   /**
@@ -80,7 +87,7 @@ export default class PointPresenter {
   };
 
   /**
-   * Сбрасывает представление точки.
+   * Закрывает форму редактирования.
    */
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {

@@ -84,7 +84,7 @@ export default class TripPresenter {
   }
 
   /**
-   * Сбрасывает представление всех точек.
+   * Изменяет представление точек путешествия.
    */
   #handleModeChange = () => {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
@@ -104,6 +104,7 @@ export default class TripPresenter {
     }
 
     this.#renderSort();
+
     this.#tripPoints.forEach((point) => {
       this.#renderPoint(point);
     });
