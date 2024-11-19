@@ -1,22 +1,36 @@
+import RouteView from '../view/route-view.js';
+import FiltersView from '../view/filters-view.js';
+import SortView from '../view/sort-view.js';
+import { render, RenderPosition } from '../framework/render.js';
 import ListPointsView from '../view/list-points-view.js';
 import MessageView from '../view/message-view.js';
-import { render } from '../framework/render.js';
 import { Message } from '../const.js';
 import PointPresenter from './point-presenter.js';
+import { generateFilter } from '../utils/filter.js';
+
 
 export default class TripPresenter {
   #tripContainer = null;
   #pointModel = null;
+  #routeContainer = null;
+  #filterContainer = null;
+  #sortContainer = null;
 
-  #listPointsComponent = new ListPointsView;
+  #listPointsComponent = new ListPointsView();
+  #routeComponent = new RouteView();
+  #sortComponent = new SortView();
 
   #tripPoints = [];
   #tripDestinations = [];
   #tripOffers = [];
 
-  constructor({ tripContainer, pointModel }) {
+  constructor({ tripContainer, pointModel, tripMainElement, filtersElement,
+    tripEventsElement }) {
     this.#tripContainer = tripContainer;
     this.#pointModel = pointModel;
+    this.#routeContainer = tripMainElement;
+    this.#filterContainer = filtersElement;
+    this.#sortContainer = tripEventsElement;
   }
 
   init() {
@@ -28,6 +42,28 @@ export default class TripPresenter {
     this.#tripOffers = [...this.#pointModel.offer];
 
     this.#renderTrip();
+  }
+
+  /**
+   * Рендеринг маршрута.
+   */
+  #renderRoute() {
+    render(this.#routeComponent, this.#routeContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  /**
+   * Рендеринг сортировки.
+   */
+  #renderSort() {
+    render(this.#sortComponent, this.#sortContainer);
+  }
+
+  /**
+   * Рендеринг фильтров.
+   */
+  #renderFilter() {
+    const filters = generateFilter(this.#pointModel.point);
+    render(new FiltersView({filters}), this.#filterContainer);
   }
 
   /**
@@ -50,6 +86,9 @@ export default class TripPresenter {
    * Рендеринг всего списка поездок.
    */
   #renderTrip() {
+    this.#renderRoute();
+    this.#renderSort();
+    this.#renderFilter();
     render(this.#listPointsComponent, this.#tripContainer);
 
     if (!this.#tripPoints.length) {
