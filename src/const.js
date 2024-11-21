@@ -23,4 +23,13 @@ const Message = {
   NEW_EVENT: 'Click New Event to create your first point',
 };
 
-export { DateFormat, TimeFormat, Message, FilterType };
+const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers'
+};
+
+
+export { DateFormat, TimeFormat, Message, FilterType, SortType };
