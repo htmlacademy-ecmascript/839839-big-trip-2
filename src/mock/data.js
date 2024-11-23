@@ -1,6 +1,7 @@
 import { FAVORITE } from './const.js';
 import { getRandomArrayElement } from './util.js';
 import { mockDestinations } from './description.js';
+import { nanoid } from 'nanoid';
 
 const mockData = [
   {
@@ -76,6 +77,11 @@ const mockData = [
 ];
 
 const getRandomPoint = () =>
-  getRandomArrayElement(mockData);
+  (
+    {
+      ...getRandomArrayElement(mockData),
+      id: nanoid(),
+    }
+  );
 
 export { getRandomPoint };

@@ -114,14 +114,16 @@ export default class OpenPointView extends AbstractView {
   #point = null;
   #allOffers = null;
   #allDestinations = null;
-  #hendleButtonClick = null;
+  #handleButtonClick = null;
+  #handleFormSubmit = null;
 
-  constructor({point, allOffers, allDestinations, onFormClick}) {
+  constructor({point, allOffers, allDestinations, onFormClick, onFormSubmit}) {
     super();
     this.#point = point;
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
-    this.#hendleButtonClick = onFormClick;
+    this.#handleButtonClick = onFormClick;
+    this.#handleFormSubmit = onFormSubmit;
 
     this.element.querySelector('form').addEventListener('submit', this.#onSaveClick);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onDeleteClick);
@@ -133,11 +135,11 @@ export default class OpenPointView extends AbstractView {
 
   #onSaveClick = (evt) => {
     evt.preventDefault();
-    this.#hendleButtonClick();
+    this.#handleFormSubmit(this.#point);
   };
 
   #onDeleteClick = (evt) => {
     evt.preventDefault();
-    this.#hendleButtonClick();
+    this.#handleButtonClick();
   };
 }
