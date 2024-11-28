@@ -8,7 +8,7 @@ import { Message, SortType } from '../const.js';
 import PointPresenter from './point-presenter.js';
 import { generateFilter } from '../utils/filter.js';
 import { updateItem } from '../utils/utils.js';
-import { sortPointByPrice, sortPointByDay } from '../utils/sort.js';
+import { sortPointByPrice, sortPointByDay, sortPointByDuration } from '../utils/sort.js';
 
 
 export default class TripPresenter {
@@ -44,7 +44,7 @@ export default class TripPresenter {
     /**
      * Копия данных модели(временная)
      */
-    this.#tripPoints = [...this.#pointModel.point].sort(sortPointByDay);
+    this.#tripPoints = [...this.#pointModel.point];
     this.#tripDestinations = [...this.#pointModel.destination];
     this.#tripOffers = [...this.#pointModel.offer];
 
@@ -64,10 +64,10 @@ export default class TripPresenter {
         this.#tripPoints.sort(sortPointByPrice);
         break;
       case SortType.TIME:
-        this.#tripPoints.sort();
+        this.#tripPoints.sort(sortPointByDuration);
         break;
       default:
-        this.#tripPoints = [...this.#sourcePoints];
+        this.#tripPoints.sort(sortPointByDay);
     }
     this.#currentSortType = sortType;
   }
@@ -162,6 +162,7 @@ export default class TripPresenter {
     }
 
     this.#renderSort();
+    this.#tripPoints.sort(sortPointByDay);
 
     this.#renderListPoint();
   }

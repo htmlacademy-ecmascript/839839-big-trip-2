@@ -21,4 +21,11 @@ const sortPointByDay = (pointA, pointB) => {
   return weight !== null ? weight : dayjs(pointB.dateFrom).diff(dayjs(pointA.dateFrom));
 };
 
-export { sortPointByPrice, sortPointByDay };
+const sortPointByDuration = (pointA, pointB) => {
+  const durationA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+  const durationB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
+
+  return durationB - durationA;
+};
+
+export { sortPointByPrice, sortPointByDay, sortPointByDuration };
