@@ -45,6 +45,7 @@ export default class TripPresenter {
      * Копия данных модели(временная)
      */
     this.#tripPoints = [...this.#pointModel.point];
+    this.#sourcePoints = [...this.#pointModel.point];
     this.#tripDestinations = [...this.#pointModel.destination];
     this.#tripOffers = [...this.#pointModel.offer];
 
@@ -67,7 +68,7 @@ export default class TripPresenter {
         this.#tripPoints.sort(sortPointByDuration);
         break;
       default:
-        this.#tripPoints.sort(sortPointByDay);
+        this.#tripPoints = [...this.#sourcePoints];
     }
     this.#currentSortType = sortType;
   }
@@ -87,7 +88,8 @@ export default class TripPresenter {
    */
   #renderSort() {
     this.#sortComponent = new SortView({
-      onSortTypeChange: this.#handleSortTypeChange
+      onSortTypeChange: this.#handleSortTypeChange,
+      currentType: this.#currentSortType
     });
     render(this.#sortComponent, this.#sortContainer, RenderPosition.AFTERBEGIN);
   }
@@ -107,6 +109,7 @@ export default class TripPresenter {
    */
   #handlePointChange = (updatedPoint) => {
     this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
+    this.#sourcePoints = updateItem(this.#sourcePoints, updatedPoint);
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 
@@ -162,7 +165,7 @@ export default class TripPresenter {
     }
 
     this.#renderSort();
-    this.#tripPoints.sort(sortPointByDay);
+    this.#sourcePoints.sort(sortPointByDay);
 
     this.#renderListPoint();
   }
