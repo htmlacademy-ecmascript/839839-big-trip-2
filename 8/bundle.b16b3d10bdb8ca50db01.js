@@ -999,7 +999,7 @@ const getWeightForNullDate = (dateA, dateB) => {
 };
 const sortPointByDay = (pointA, pointB) => {
   const weight = getWeightForNullDate(pointA.dateFrom, pointB.dateFrom);
-  return weight !== null ? weight : dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointB.dateFrom).diff(dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointA.dateFrom));
+  return weight !== null ? weight : dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointA.dateFrom).diff(dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointB.dateFrom));
 };
 const sortPointByDuration = (pointA, pointB) => {
   const durationA = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointA.dateTo).diff(dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointA.dateFrom));
@@ -2191,4 +2191,4 @@ tripPresenter.init();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle.c71b547332d4e94ea5d1.js.map
+//# sourceMappingURL=bundle.b16b3d10bdb8ca50db01.js.map
