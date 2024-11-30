@@ -580,10 +580,10 @@ class PointModel {
 
 /***/ }),
 
-/***/ "./src/presenter/point-presenter.js.js":
-/*!*********************************************!*\
-  !*** ./src/presenter/point-presenter.js.js ***!
-  \*********************************************/
+/***/ "./src/presenter/point-presenter.js":
+/*!******************************************!*\
+  !*** ./src/presenter/point-presenter.js ***!
+  \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -591,9 +591,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ PointPresenter)
 /* harmony export */ });
-/* harmony import */ var _framework_render__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../framework/render */ "./src/framework/render.js");
-/* harmony import */ var _view_item_point_view__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../view/item-point-view */ "./src/view/item-point-view.js");
-/* harmony import */ var _view_open_point_view__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../view/open-point-view */ "./src/view/open-point-view.js");
+/* harmony import */ var _framework_render_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../framework/render.js */ "./src/framework/render.js");
+/* harmony import */ var _view_item_point_view_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../view/item-point-view.js */ "./src/view/item-point-view.js");
+/* harmony import */ var _view_open_point_view_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../view/open-point-view.js */ "./src/view/open-point-view.js");
 
 
 
@@ -628,14 +628,14 @@ class PointPresenter {
     this.#point = point;
     const prevPointComponent = this.#pointComponent;
     const prevOpenPointComponent = this.#openPointComponent;
-    this.#pointComponent = new _view_item_point_view__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    this.#pointComponent = new _view_item_point_view_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
       point: this.#point,
       allOffers: this.#allOffers,
       allDestinations: this.#allDestinations,
       onRollupClick: this.#handleRollupClick,
       onFavoriteClick: this.#handleFavoriteClick
     });
-    this.#openPointComponent = new _view_open_point_view__WEBPACK_IMPORTED_MODULE_2__["default"]({
+    this.#openPointComponent = new _view_open_point_view_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
       point: this.#point,
       allOffers: this.#allOffers,
       allDestinations: this.#allDestinations,
@@ -643,25 +643,25 @@ class PointPresenter {
       onFormSubmit: this.#handleFormSubmit
     });
     if (prevPointComponent === null || prevOpenPointComponent === null) {
-      (0,_framework_render__WEBPACK_IMPORTED_MODULE_0__.render)(this.#pointComponent, this.#listPointsComponent);
+      (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_0__.render)(this.#pointComponent, this.#listPointsComponent);
       return;
     }
     if (this.#mode === Mode.DEFAULT) {
-      (0,_framework_render__WEBPACK_IMPORTED_MODULE_0__.replace)(this.#pointComponent, prevPointComponent);
+      (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_0__.replace)(this.#pointComponent, prevPointComponent);
     }
     if (this.#mode === Mode.EDITING) {
-      (0,_framework_render__WEBPACK_IMPORTED_MODULE_0__.replace)(this.#openPointComponent, prevOpenPointComponent);
+      (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_0__.replace)(this.#openPointComponent, prevOpenPointComponent);
     }
-    (0,_framework_render__WEBPACK_IMPORTED_MODULE_0__.remove)(prevPointComponent);
-    (0,_framework_render__WEBPACK_IMPORTED_MODULE_0__.remove)(prevOpenPointComponent);
+    (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_0__.remove)(prevPointComponent);
+    (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_0__.remove)(prevOpenPointComponent);
   }
 
   /**
    * Удаляет компоненты закрытой и открытой точки из DOM.
    */
   removePoint() {
-    (0,_framework_render__WEBPACK_IMPORTED_MODULE_0__.remove)(this.#pointComponent);
-    (0,_framework_render__WEBPACK_IMPORTED_MODULE_0__.remove)(this.#openPointComponent);
+    (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_0__.remove)(this.#pointComponent);
+    (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_0__.remove)(this.#openPointComponent);
   }
 
   /**
@@ -688,7 +688,7 @@ class PointPresenter {
   * Заменяет компонент закрытой точки на компонент открытой точки.
   */
   #replacePointToOpenPoint() {
-    (0,_framework_render__WEBPACK_IMPORTED_MODULE_0__.replace)(this.#openPointComponent, this.#pointComponent);
+    (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_0__.replace)(this.#openPointComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#onEscKeydown);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
@@ -698,7 +698,7 @@ class PointPresenter {
    * Заменяет компонент открытой точки на компонент закрытой точки.
    */
   #replaceOpenPointToPoint() {
-    (0,_framework_render__WEBPACK_IMPORTED_MODULE_0__.replace)(this.#pointComponent, this.#openPointComponent);
+    (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_0__.replace)(this.#pointComponent, this.#openPointComponent);
     document.removeEventListener('keydown', this.#onEscKeydown);
     this.#mode = Mode.DEFAULT;
   }
@@ -740,7 +740,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _view_list_points_view_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../view/list-points-view.js */ "./src/view/list-points-view.js");
 /* harmony import */ var _view_message_view_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../view/message-view.js */ "./src/view/message-view.js");
 /* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../const.js */ "./src/const.js");
-/* harmony import */ var _point_presenter_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./point-presenter.js */ "./src/presenter/point-presenter.js.js");
+/* harmony import */ var _point_presenter_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./point-presenter.js */ "./src/presenter/point-presenter.js");
 /* harmony import */ var _utils_filter_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/filter.js */ "./src/utils/filter.js");
 /* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../utils/utils.js */ "./src/utils/utils.js");
 /* harmony import */ var _utils_sort_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../utils/sort.js */ "./src/utils/sort.js");
@@ -787,7 +787,8 @@ class TripPresenter {
     /**
      * Копия данных модели(временная)
      */
-    this.#tripPoints = [...this.#pointModel.point].sort(_utils_sort_js__WEBPACK_IMPORTED_MODULE_10__.sortPointByDay);
+    this.#tripPoints = [...this.#pointModel.point];
+    this.#sourcePoints = [...this.#pointModel.point];
     this.#tripDestinations = [...this.#pointModel.destination];
     this.#tripOffers = [...this.#pointModel.offer];
     this.#renderTrip();
@@ -805,7 +806,7 @@ class TripPresenter {
         this.#tripPoints.sort(_utils_sort_js__WEBPACK_IMPORTED_MODULE_10__.sortPointByPrice);
         break;
       case _const_js__WEBPACK_IMPORTED_MODULE_6__.SortType.TIME:
-        this.#tripPoints.sort();
+        this.#tripPoints.sort(_utils_sort_js__WEBPACK_IMPORTED_MODULE_10__.sortPointByDuration);
         break;
       default:
         this.#tripPoints = [...this.#sourcePoints];
@@ -826,7 +827,8 @@ class TripPresenter {
    */
   #renderSort() {
     this.#sortComponent = new _view_sort_view_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
-      onSortTypeChange: this.#handleSortTypeChange
+      onSortTypeChange: this.#handleSortTypeChange,
+      currentType: this.#currentSortType
     });
     (0,_framework_render_js__WEBPACK_IMPORTED_MODULE_3__.render)(this.#sortComponent, this.#sortContainer, _framework_render_js__WEBPACK_IMPORTED_MODULE_3__.RenderPosition.AFTERBEGIN);
   }
@@ -848,6 +850,7 @@ class TripPresenter {
    */
   #handlePointChange = updatedPoint => {
     this.#tripPoints = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_9__.updateItem)(this.#tripPoints, updatedPoint);
+    this.#sourcePoints = (0,_utils_utils_js__WEBPACK_IMPORTED_MODULE_9__.updateItem)(this.#sourcePoints, updatedPoint);
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 
@@ -900,6 +903,7 @@ class TripPresenter {
       return;
     }
     this.#renderSort();
+    this.#sourcePoints.sort(_utils_sort_js__WEBPACK_IMPORTED_MODULE_10__.sortPointByDay);
     this.#renderListPoint();
   }
 }
@@ -974,13 +978,14 @@ function generateFilter(tripPoints) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "sortPointByDay": () => (/* binding */ sortPointByDay),
+/* harmony export */   "sortPointByDuration": () => (/* binding */ sortPointByDuration),
 /* harmony export */   "sortPointByPrice": () => (/* binding */ sortPointByPrice)
 /* harmony export */ });
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
 
 const sortPointByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
-function getWeightForNullDate(dateA, dateB) {
+const getWeightForNullDate = (dateA, dateB) => {
   if (dateA === null && dateB === null) {
     return 0;
   }
@@ -991,11 +996,16 @@ function getWeightForNullDate(dateA, dateB) {
     return -1;
   }
   return null;
-}
-function sortPointByDay(pointA, pointB) {
+};
+const sortPointByDay = (pointA, pointB) => {
   const weight = getWeightForNullDate(pointA.dateFrom, pointB.dateFrom);
   return weight !== null ? weight : dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointB.dateFrom).diff(dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointA.dateFrom));
-}
+};
+const sortPointByDuration = (pointA, pointB) => {
+  const durationA = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointA.dateTo).diff(dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointA.dateFrom));
+  const durationB = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointB.dateTo).diff(dayjs__WEBPACK_IMPORTED_MODULE_0___default()(pointB.dateFrom));
+  return durationB - durationA;
+};
 
 
 /***/ }),
@@ -1184,8 +1194,8 @@ class ItemPointView extends _framework_view_abstract_view_js__WEBPACK_IMPORTED_M
   #point = null;
   #allOffers = null;
   #allDestinations = null;
-  #hendleRollupClick = null;
-  #hendleFavoriteClick = null;
+  #handleRollupClick = null;
+  #handleFavoriteClick = null;
   constructor({
     point,
     allOffers,
@@ -1197,8 +1207,8 @@ class ItemPointView extends _framework_view_abstract_view_js__WEBPACK_IMPORTED_M
     this.#point = point;
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
-    this.#hendleRollupClick = onRollupClick;
-    this.#hendleFavoriteClick = onFavoriteClick;
+    this.#handleRollupClick = onRollupClick;
+    this.#handleFavoriteClick = onFavoriteClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onRollupClick);
     this.element.querySelector('.event__favorite-btn ').addEventListener('click', this.#onFavoriteBtnClick);
   }
@@ -1207,11 +1217,11 @@ class ItemPointView extends _framework_view_abstract_view_js__WEBPACK_IMPORTED_M
   }
   #onRollupClick = evt => {
     evt.preventDefault();
-    this.#hendleRollupClick();
+    this.#handleRollupClick();
   };
   #onFavoriteBtnClick = evt => {
     evt.preventDefault();
-    this.#hendleFavoriteClick();
+    this.#handleFavoriteClick();
   };
 }
 
@@ -1469,25 +1479,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../const.js */ "./src/const.js");
 
 
-const createSortTemplate = () => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+const isDisabled = sort => sort === 'event' || sort === 'offers' ? 'disabled' : '';
+const isChecked = (currentType, sort) => sort === currentType ? 'checked' : '';
+const createSortTemplate = currentType => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
 
     ${Object.values(_const_js__WEBPACK_IMPORTED_MODULE_1__.SortType).map(sort => `<div class="trip-sort__item  trip-sort__item--${sort}">
-      <input id="sort-${sort}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${sort}" data-sort-type="${sort}" checked>
+      <input id="sort-${sort}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${sort}" data-sort-type="${sort}" ${isChecked(currentType, sort)} ${isDisabled(sort)}>
       <label class="trip-sort__btn" for="sort-${sort}">${sort}</label>
     </div>`).join('')}
 
   </form>`;
 class SortView extends _framework_view_abstract_view_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   #handleSortTypeChange = null;
+  #currentType = null;
   constructor({
-    onSortTypeChange
+    onSortTypeChange,
+    currentType
   }) {
     super();
     this.#handleSortTypeChange = onSortTypeChange;
+    this.#currentType = currentType;
     this.element.addEventListener('click', this.#onSortFormClick);
   }
   get template() {
-    return createSortTemplate();
+    return createSortTemplate(this.#currentType);
   }
   #onSortFormClick = evt => {
     if (evt.target.tagName !== 'INPUT') {
@@ -2176,4 +2191,4 @@ tripPresenter.init();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle.707c5e116e928a160f25.js.map
+//# sourceMappingURL=bundle.c71b547332d4e94ea5d1.js.map
