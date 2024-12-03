@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { formatDate } from '../utils/utils.js';
+import { formatDate, formatDateIso } from '../utils/utils.js';
 import { DateFormat } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -118,6 +118,8 @@ export default class OpenPointView extends AbstractStatefulView {
   #allDestinations = null;
   #handleButtonClick = null;
   #handleFormSubmit = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({point, allOffers, allDestinations, onFormClick, onFormSubmit}) {
     super();
@@ -143,6 +145,20 @@ export default class OpenPointView extends AbstractStatefulView {
     this.updateElement(OpenPointView.parsePointToState(point));
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if(this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+    if(this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  }
+
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#onSaveClick);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onDeleteClick);
@@ -152,6 +168,9 @@ export default class OpenPointView extends AbstractStatefulView {
     if (offersList) {
       offersList.addEventListener('change', this.#onOffersChange);
     }
+
+    this.#setDatepickerStart();
+    this.#setDatepickerEnd();
   }
 
   #onSaveClick = (evt) => {
@@ -194,12 +213,52 @@ export default class OpenPointView extends AbstractStatefulView {
     });
   };
 
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      isDateFrom: formatDateIso(userDate),
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      isDateTo: formatDateIso(userDate),
+    });
+  };
+
+  #setDatepickerStart() {
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('[name="event-start-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.isDateFrom,
+        enableTime: true,
+        'time_24hr': true,
+        onChange: this.#dateFromChangeHandler
+      }
+    );
+  }
+
+  #setDatepickerEnd() {
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('[name="event-end-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.isDateTo,
+        enableTime: true,
+        'time_24hr': true,
+        onChange: this.#dateToChangeHandler
+      }
+    );
+  }
+
   static parsePointToState = (point) =>
     ({
       ...point,
       isTypePoint: point.type,
       isDestinationId: point.destination,
-      isOffersId: [...point.offers]
+      isOffersId: [...point.offers],
+      isDateFrom: point.dateFrom,
+      isDateTo: point.dateTo,
     });
 
   static parseStateToPoint = (state) => {
@@ -208,10 +267,14 @@ export default class OpenPointView extends AbstractStatefulView {
     point.type = point.isTypePoint;
     point.destination = point.isDestinationId;
     point.offers = point.isOffersId;
+    point.dateFrom = point.isDateFrom;
+    point.dateTo = point.isDateTo;
 
     delete point.isTypePoint;
     delete point.isDestinationId;
     delete point.isOffersId;
+    delete point.isDateFrom;
+    delete point.isDateTo;
 
     return point;
   };
