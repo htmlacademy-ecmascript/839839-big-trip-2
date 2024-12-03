@@ -99,12 +99,12 @@ const createOpenPoint = (point, allOffers, allDestinations) => {
         <section class="event__details">
           ${getListOffers(allOffersByType, selectedOffers)}
 
-          <section class="event__section  event__section--destination">
+          ${!!poinDestination.description || !!poinDestination.pictures.length ? `<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${poinDestination.description}</p>
-
             ${getPhotoContainer(poinDestination.pictures)}
-          </section>
+          </section>` : ''}
+
         </section>
       </form>
     </li>`);
