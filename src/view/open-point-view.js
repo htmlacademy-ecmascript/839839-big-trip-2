@@ -154,7 +154,7 @@ export default class OpenPointView extends AbstractStatefulView {
 
   #onSaveClick = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit(OpenPointView.parseStateToPoint(this._state));
   };
 
   #onDeleteClick = (evt) => {
@@ -199,4 +199,18 @@ export default class OpenPointView extends AbstractStatefulView {
       isDestinationId: point.destination,
       isOffersId: [...point.offers]
     });
+
+  static parseStateToPoint = (state) => {
+    const point = {...state};
+
+    point.type = point.isTypePoint;
+    point.destination = point.isDestinationId;
+    point.offers = point.isOffersId;
+
+    delete point.isTypePoint;
+    delete point.isDestinationId;
+    delete point.isOffersId;
+
+    return point;
+  };
 }
