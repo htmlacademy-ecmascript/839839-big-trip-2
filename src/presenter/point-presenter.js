@@ -1,11 +1,7 @@
 import { replace, render, remove } from '../framework/render.js';
 import ItemPointView from '../view/item-point-view.js';
 import OpenPointView from '../view/open-point-view.js';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
+import { Mode } from '../const.js';
 
 export default class PointPresenter {
   #listPointsComponent = null;

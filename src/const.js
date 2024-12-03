@@ -31,5 +31,9 @@ const SortType = {
   OFFERS: 'offers'
 };
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
 
-export { DateFormat, TimeFormat, Message, FilterType, SortType };
+export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode };
