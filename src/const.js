@@ -36,4 +36,9 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
-export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode };
+const Period = {
+  HOUR: 60,
+  DAY: 1440
+};
+
+export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode, Period };

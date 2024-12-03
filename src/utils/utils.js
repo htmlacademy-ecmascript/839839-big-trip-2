@@ -1,25 +1,25 @@
 import dayjs from 'dayjs';
-import { DateFormat, TimeFormat } from '../const.js';
-
-const Period = {
-  HOUR: 60,
-  DAY: 1440
-};
+import duration from 'dayjs/plugin/duration';
+import { DateFormat, Period } from '../const.js';
+dayjs.extend(duration);
 
 const formatDate = (date, format = DateFormat.SHORT_DATE_TIME) =>
   date ? dayjs(date).format(format) : '';
 
 const getTimeDifference = (dateStart, dateEnd) => {
-  const difference = dayjs(dateEnd).diff(dateStart, 'minute');
+  const difference = dayjs(dateEnd).diff(dayjs(dateStart), 'minute');
+
+  const timeLength = dayjs.duration(difference, 'minutes');
+
   if (difference < Period.HOUR) {
-    return dayjs(difference).format(TimeFormat.MINUTE_TIME);
+    return `${timeLength.minutes()}m`;
   }
-  if (difference > Period.HOUR && difference < Period.DAY) {
-    return dayjs(difference).format(TimeFormat.HOUR_MINUTE_TIME);
+
+  if (difference < Period.DAY) {
+    return `${timeLength.hours()}h ${timeLength.minutes()}m`;
   }
-  if (difference > Period.DAY) {
-    return dayjs(difference).format(TimeFormat.DAY_HOUR_MINUTE_TIME);
-  }
+
+  return `${timeLength.days()}d ${timeLength.hours()}h ${timeLength.minutes()}m`;
 };
 
 /**
