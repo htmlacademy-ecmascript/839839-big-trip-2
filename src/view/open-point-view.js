@@ -137,6 +137,7 @@ export default class OpenPointView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#onSaveClick);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onDeleteClick);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
   }
 
   #onSaveClick = (evt) => {
@@ -147,6 +148,13 @@ export default class OpenPointView extends AbstractStatefulView {
   #onDeleteClick = (evt) => {
     evt.preventDefault();
     this.#handleButtonClick();
+  };
+
+  #onTypeChange = (evt)=> {
+    evt.preventDefault();
+    this.updateElement({
+      isTypePoint: evt.target.value,
+    });
   };
 
   #onCityChange = (evt) => {
@@ -160,6 +168,7 @@ export default class OpenPointView extends AbstractStatefulView {
   static parsePointToState = (point) =>
     ({
       ...point,
+      isTypePoint: point.type,
       isNamePoint: point.destination,
     });
 }
