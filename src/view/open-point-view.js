@@ -133,6 +133,14 @@ export default class OpenPointView extends AbstractStatefulView {
     return createOpenPoint(this._state, this.#allOffers, this.#allDestinations);
   }
 
+  /**
+   * Сбрасывает состояние элемента, обновляя его на основе переданной точки.
+   * @param {Object} point - Точка с начальными данными.
+   */
+  reset(point) {
+    this.updateElement(OpenPointView.parsePointToState(point));
+  }
+
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#onSaveClick);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onDeleteClick);

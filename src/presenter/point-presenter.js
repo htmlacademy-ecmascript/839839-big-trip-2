@@ -78,6 +78,7 @@ export default class PointPresenter {
   #onEscKeydown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#openPointComponent.reset(this.#point);
       this.#replaceOpenPointToPoint();
     }
   };
@@ -87,6 +88,7 @@ export default class PointPresenter {
    */
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#openPointComponent.reset(this.#point);
       this.#replaceOpenPointToPoint();
     }
   }
