@@ -138,6 +138,10 @@ export default class OpenPointView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onDeleteClick);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    const offersList = this.element.querySelector('.event__available-offers');
+    if (offersList) {
+      offersList.addEventListener('change', this.#onOffersChange);
+    }
   }
 
   #onSaveClick = (evt) => {
@@ -154,6 +158,7 @@ export default class OpenPointView extends AbstractStatefulView {
     evt.preventDefault();
     this.updateElement({
       isTypePoint: evt.target.value,
+      isOffersId: []
     });
   };
 
@@ -165,10 +170,25 @@ export default class OpenPointView extends AbstractStatefulView {
     });
   };
 
+  #onOffersChange = (evt) => {
+    const offerId = evt.target.id.split('-')[2];
+    let updateOffers = [...this._state.isOffersId];
+    if (evt.target.checked) {
+      updateOffers.push(offerId);
+    } else {
+      updateOffers = updateOffers.filter((id) => id !== offerId);
+    }
+
+    this.updateElement({
+      isOffersId: updateOffers,
+    });
+  };
+
   static parsePointToState = (point) =>
     ({
       ...point,
       isTypePoint: point.type,
       isNamePoint: point.destination,
+      isOffersId: [...point.offers]
     });
 }
