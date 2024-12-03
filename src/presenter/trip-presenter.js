@@ -64,7 +64,7 @@ export default class TripPresenter {
    * Рендеринг кнопки New event.
    */
   #renderButtonNewEvent() {
-    render(new ButtonNewEvent, this.#routeContainer);
+    render(new ButtonNewEvent(), this.#routeContainer);
   }
 
   #sortPoints(sortType) {
