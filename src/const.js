@@ -41,4 +41,17 @@ const Period = {
   DAY: 1440
 };
 
-export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode, Period };
+const newPointDefault = [
+  {
+    id: '',
+    type: 'Flight',
+    dateFrom: '',
+    dateTo: '',
+    destination: '',
+    offers: [],
+    basePrice: 0,
+    isFavorite: false,
+  }
+];
+
+export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode, Period, newPointDefault };
