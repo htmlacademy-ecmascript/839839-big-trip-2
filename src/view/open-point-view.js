@@ -34,10 +34,10 @@ const getPhotoContainer = (pictures) =>
   </div>` : '';
 
 const createOpenPoint = (point, allOffers, allDestinations) => {
-  const {dateFrom, dateTo, basePrice, isTypePoint, isNamePoint, isOffersId} = point;
+  const {dateFrom, dateTo, basePrice, isTypePoint, isDestinationId, isOffersId} = point;
 
   const allOffersByType = allOffers.find((offer) => isTypePoint === offer.type).offers;
-  const poinDestination = allDestinations.find((dest) => isNamePoint === dest.id);
+  const poinDestination = allDestinations.find((dest) => isDestinationId === dest.id);
   const selectedOffers = allOffersByType.filter((offer) => isOffersId.includes(offer.id));
 
   return(
@@ -166,7 +166,7 @@ export default class OpenPointView extends AbstractStatefulView {
     evt.preventDefault();
     const newIdDestination = this.#allDestinations.find((des) => des.name === evt.target.value);
     this.updateElement({
-      isNamePoint: newIdDestination.id,
+      isDestinationId: newIdDestination.id,
     });
   };
 
@@ -188,7 +188,7 @@ export default class OpenPointView extends AbstractStatefulView {
     ({
       ...point,
       isTypePoint: point.type,
-      isNamePoint: point.destination,
+      isDestinationId: point.destination,
       isOffersId: [...point.offers]
     });
 }
