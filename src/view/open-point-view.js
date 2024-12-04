@@ -208,19 +208,19 @@ export default class OpenPointView extends AbstractStatefulView {
       updateOffers = updateOffers.filter((id) => id !== offerId);
     }
 
-    this.updateElement({
+    this._setState({
       isOffersId: updateOffers,
     });
   };
 
   #dateFromChangeHandler = ([userDate]) => {
-    this.updateElement({
+    this._setState({
       isDateFrom: formatDateIso(userDate),
     });
   };
 
   #dateToChangeHandler = ([userDate]) => {
-    this.updateElement({
+    this._setState({
       isDateTo: formatDateIso(userDate),
     });
   };
