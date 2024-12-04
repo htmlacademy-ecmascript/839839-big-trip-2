@@ -1,6 +1,6 @@
-import { replace, render, remove } from '../framework/render';
-import ItemPointView from '../view/item-point-view';
-import OpenPointView from '../view/open-point-view';
+import { replace, render, remove } from '../framework/render.js';
+import ItemPointView from '../view/item-point-view.js';
+import OpenPointView from '../view/open-point-view.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',

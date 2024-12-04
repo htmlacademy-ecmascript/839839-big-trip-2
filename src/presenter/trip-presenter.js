@@ -4,10 +4,11 @@ import SortView from '../view/sort-view.js';
 import { render, RenderPosition } from '../framework/render.js';
 import ListPointsView from '../view/list-points-view.js';
 import MessageView from '../view/message-view.js';
-import { Message } from '../const.js';
+import { Message, SortType } from '../const.js';
 import PointPresenter from './point-presenter.js';
 import { generateFilter } from '../utils/filter.js';
 import { updateItem } from '../utils/utils.js';
+import { sortPointByPrice, sortPointByDay, sortPointByDuration } from '../utils/sort.js';
 
 
 export default class TripPresenter {
@@ -19,13 +20,16 @@ export default class TripPresenter {
 
   #listPointsComponent = new ListPointsView();
   #routeComponent = new RouteView();
-  #sortComponent = new SortView();
+  #sortComponent = null;
 
   #tripPoints = [];
   #tripDestinations = [];
   #tripOffers = [];
 
   #pointPresenters = new Map();
+
+  #currentSortType = SortType.DAY;
+  #sourcePoints = [];
 
   constructor({ tripContainer, pointModel, tripMainElement, filtersElement,
     tripEventsElement }) {
@@ -41,6 +45,7 @@ export default class TripPresenter {
      * Копия данных модели(временная)
      */
     this.#tripPoints = [...this.#pointModel.point];
+    this.#sourcePoints = [...this.#pointModel.point];
     this.#tripDestinations = [...this.#pointModel.destination];
     this.#tripOffers = [...this.#pointModel.offer];
 
@@ -54,10 +59,38 @@ export default class TripPresenter {
     render(this.#routeComponent, this.#routeContainer, RenderPosition.AFTERBEGIN);
   }
 
+  #sortPoints(sortType) {
+    switch (sortType) {
+      case SortType.PRICE:
+        this.#tripPoints.sort(sortPointByPrice);
+        break;
+      case SortType.TIME:
+        this.#tripPoints.sort(sortPointByDuration);
+        break;
+      default:
+        this.#tripPoints = [...this.#sourcePoints];
+    }
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortPoints(sortType);
+    this.#clearlistPoints();
+    this.#renderListPoint();
+  };
+
   /**
    * Рендеринг сортировки.
    */
   #renderSort() {
+    this.#sortComponent = new SortView({
+      onSortTypeChange: this.#handleSortTypeChange,
+      currentType: this.#currentSortType
+    });
     render(this.#sortComponent, this.#sortContainer, RenderPosition.AFTERBEGIN);
   }
 
@@ -76,6 +109,7 @@ export default class TripPresenter {
    */
   #handlePointChange = (updatedPoint) => {
     this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
+    this.#sourcePoints = updateItem(this.#sourcePoints, updatedPoint);
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 
@@ -111,6 +145,12 @@ export default class TripPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
+  #renderListPoint() {
+    this.#tripPoints.forEach((point) => {
+      this.#renderPoint(point);
+    });
+  }
+
   /**
    * Рендеринг всего списка поездок.
    */
@@ -125,9 +165,8 @@ export default class TripPresenter {
     }
 
     this.#renderSort();
+    this.#sourcePoints.sort(sortPointByDay);
 
-    this.#tripPoints.forEach((point) => {
-      this.#renderPoint(point);
-    });
+    this.#renderListPoint();
   }
 }
