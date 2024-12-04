@@ -233,7 +233,7 @@ export default class OpenPointView extends AbstractStatefulView {
         defaultDate: this._state.isDateFrom,
         enableTime: true,
         'time_24hr': true,
-        onChange: this.#dateFromChangeHandler
+        onChange: this.#dateFromChangeHandler,
       }
     );
   }
@@ -246,7 +246,8 @@ export default class OpenPointView extends AbstractStatefulView {
         defaultDate: this._state.isDateTo,
         enableTime: true,
         'time_24hr': true,
-        onChange: this.#dateToChangeHandler
+        onChange: this.#dateToChangeHandler,
+        minDate: this._state.isDateFrom,
       }
     );
   }
