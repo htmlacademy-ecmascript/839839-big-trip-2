@@ -1,11 +1,7 @@
 import { replace, render, remove } from '../framework/render.js';
 import ItemPointView from '../view/item-point-view.js';
 import OpenPointView from '../view/open-point-view.js';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
+import { Mode } from '../const.js';
 
 export default class PointPresenter {
   #listPointsComponent = null;
@@ -82,6 +78,7 @@ export default class PointPresenter {
   #onEscKeydown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#openPointComponent.reset(this.#point);
       this.#replaceOpenPointToPoint();
     }
   };
@@ -91,6 +88,7 @@ export default class PointPresenter {
    */
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#openPointComponent.reset(this.#point);
       this.#replaceOpenPointToPoint();
     }
   }

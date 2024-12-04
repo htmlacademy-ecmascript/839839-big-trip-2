@@ -9,6 +9,7 @@ import PointPresenter from './point-presenter.js';
 import { generateFilter } from '../utils/filter.js';
 import { updateItem } from '../utils/utils.js';
 import { sortPointByPrice, sortPointByDay, sortPointByDuration } from '../utils/sort.js';
+import ButtonNewEvent from '../view/button-new-event.js';
 
 
 export default class TripPresenter {
@@ -57,6 +58,13 @@ export default class TripPresenter {
    */
   #renderRoute() {
     render(this.#routeComponent, this.#routeContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  /**
+   * Рендеринг кнопки New event.
+   */
+  #renderButtonNewEvent() {
+    render(new ButtonNewEvent(), this.#routeContainer);
   }
 
   #sortPoints(sortType) {
@@ -156,6 +164,7 @@ export default class TripPresenter {
    */
   #renderTrip() {
     this.#renderRoute();
+    this.#renderButtonNewEvent();
     this.#renderFilter();
     render(this.#listPointsComponent, this.#tripContainer);
 
