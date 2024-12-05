@@ -194,9 +194,11 @@ export default class OpenPointView extends AbstractStatefulView {
   #onCityChange = (evt) => {
     evt.preventDefault();
     const newIdDestination = this.#allDestinations.find((des) => des.name === evt.target.value);
-    this.updateElement({
-      isDestinationId: newIdDestination.id,
-    });
+    if(newIdDestination) {
+      this.updateElement({
+        isDestinationId: newIdDestination.id,
+      });
+    }
   };
 
   #onOffersChange = (evt) => {
