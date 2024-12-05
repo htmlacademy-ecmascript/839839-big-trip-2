@@ -4,6 +4,19 @@ import { DateFormat } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+const newPointDefault = [
+  {
+    id: '',
+    type: 'Flight',
+    dateFrom: '',
+    dateTo: '',
+    destination: '',
+    offers: [],
+    basePrice: 0,
+    isFavorite: false,
+  }
+];
+
 const isChecked = (offer, selectedOffers) => selectedOffers.includes(offer) ? 'checked' : '';
 const isCheckedType = (pointType, offerType) => pointType === offerType ? 'checked' : '';
 
@@ -121,7 +134,7 @@ export default class OpenPointView extends AbstractStatefulView {
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({point, allOffers, allDestinations, onFormClick, onFormSubmit}) {
+  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick, onFormSubmit}) {
     super();
     this._setState(OpenPointView.parsePointToState(point));
     this.#point = point;
