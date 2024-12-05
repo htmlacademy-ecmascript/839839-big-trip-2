@@ -164,6 +164,7 @@ export default class OpenPointView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onDeleteClick);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
     const offersList = this.element.querySelector('.event__available-offers');
     if (offersList) {
       offersList.addEventListener('change', this.#onOffersChange);
@@ -215,6 +216,13 @@ export default class OpenPointView extends AbstractStatefulView {
     });
   };
 
+  #onPriceChange = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      isPrice: Number(evt.target.value),
+    });
+  };
+
   #dateFromChangeHandler = ([userDate]) => {
     this._setState({
       isDateFrom: formatDateIso(userDate),
@@ -262,6 +270,7 @@ export default class OpenPointView extends AbstractStatefulView {
       isOffersId: [...point.offers],
       isDateFrom: point.dateFrom,
       isDateTo: point.dateTo,
+      isPrice: point.basePrice,
     });
 
   static parseStateToPoint = (state) => {
@@ -272,12 +281,14 @@ export default class OpenPointView extends AbstractStatefulView {
     point.offers = point.isOffersId;
     point.dateFrom = point.isDateFrom;
     point.dateTo = point.isDateTo;
+    point.basePrice = point.isPrice;
 
     delete point.isTypePoint;
     delete point.isDestinationId;
     delete point.isOffersId;
     delete point.isDateFrom;
     delete point.isDateTo;
+    delete point.isPrice;
 
     return point;
   };
