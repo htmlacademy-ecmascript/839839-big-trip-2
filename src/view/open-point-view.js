@@ -237,7 +237,7 @@ export default class OpenPointView extends AbstractStatefulView {
   };
 
   #dateFromChangeHandler = ([userDate]) => {
-    this._setState({
+    this.updateElement({
       isDateFrom: formatDateIso(userDate),
     });
   };
