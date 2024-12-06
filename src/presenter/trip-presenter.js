@@ -41,12 +41,16 @@ export default class TripPresenter {
     this.#sortContainer = tripEventsElement;
   }
 
+  get points() {
+    return this.#pointModel.points;
+  }
+
   init() {
     /**
      * Копия данных модели(временная)
      */
-    this.#tripPoints = [...this.#pointModel.point];
-    this.#sourcePoints = [...this.#pointModel.point];
+    this.#tripPoints = [...this.#pointModel.points];
+    this.#sourcePoints = [...this.#pointModel.points];
     this.#tripDestinations = [...this.#pointModel.destination];
     this.#tripOffers = [...this.#pointModel.offer];
 
@@ -106,7 +110,7 @@ export default class TripPresenter {
    * Рендеринг фильтров.
    */
   #renderFilter() {
-    const filters = generateFilter(this.#pointModel.point);
+    const filters = generateFilter(this.#pointModel.points);
     render(new FiltersView({filters}), this.#filterContainer);
   }
 
