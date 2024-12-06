@@ -41,4 +41,15 @@ const Period = {
   DAY: 1440
 };
 
-export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode, Period };
+const UserAction = {
+  UPDATE_POIN: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode, Period, UserAction, UpdateType };
