@@ -13,12 +13,4 @@ export default class PointModel extends Observable {
   get points() {
     return this.#points;
   }
-
-  get destination() {
-    return this.#allDestinations;
-  }
-
-  get offer() {
-    return this.#allOffers;
-  }
 }

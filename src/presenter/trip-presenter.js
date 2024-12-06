@@ -15,6 +15,8 @@ import ButtonNewEvent from '../view/button-new-event.js';
 export default class TripPresenter {
   #tripContainer = null;
   #pointModel = null;
+  #offerModel = null;
+  #destinationModel = null;
   #routeContainer = null;
   #filterContainer = null;
   #sortContainer = null;
@@ -32,10 +34,12 @@ export default class TripPresenter {
   #currentSortType = SortType.DAY;
   #sourcePoints = [];
 
-  constructor({ tripContainer, pointModel, tripMainElement, filtersElement,
+  constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement, filtersElement,
     tripEventsElement }) {
     this.#tripContainer = tripContainer;
     this.#pointModel = pointModel;
+    this.#offerModel = offerModel;
+    this.#destinationModel = destinationModel;
     this.#routeContainer = tripMainElement;
     this.#filterContainer = filtersElement;
     this.#sortContainer = tripEventsElement;
@@ -51,8 +55,8 @@ export default class TripPresenter {
      */
     this.#tripPoints = [...this.#pointModel.points];
     this.#sourcePoints = [...this.#pointModel.points];
-    this.#tripDestinations = [...this.#pointModel.destination];
-    this.#tripOffers = [...this.#pointModel.offer];
+    this.#tripDestinations = [...this.#destinationModel.destinations];
+    this.#tripOffers = [...this.#offerModel.offers];
 
     this.#renderTrip();
   }
