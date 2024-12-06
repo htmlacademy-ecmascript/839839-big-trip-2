@@ -30,4 +30,4 @@ const getTimeDifference = (dateStart, dateEnd) => {
   return `${timeLength.days()}d ${timeLength.hours()}h ${timeLength.minutes()}m`;
 };
 
-export { formatDate, getTimeDifference, updateItem, formatDateIso };
+export { formatDate, getTimeDifference, formatDateIso };
