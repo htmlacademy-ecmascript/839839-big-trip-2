@@ -1,16 +1,14 @@
 import RouteView from '../view/route-view.js';
 import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
-import { render, RenderPosition } from '../framework/render.js';
+import { remove, render, RenderPosition } from '../framework/render.js';
 import ListPointsView from '../view/list-points-view.js';
 import MessageView from '../view/message-view.js';
-import { Message, SortType } from '../const.js';
+import { Message, SortType, UserAction, UpdateType } from '../const.js';
 import PointPresenter from './point-presenter.js';
 import { generateFilter } from '../utils/filter.js';
-import { updateItem } from '../utils/utils.js';
 import { sortPointByPrice, sortPointByDay, sortPointByDuration } from '../utils/sort.js';
 import ButtonNewEvent from '../view/button-new-event.js';
-
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -38,6 +36,8 @@ export default class TripPresenter {
     this.#routeContainer = tripMainElement;
     this.#filterContainer = filtersElement;
     this.#sortContainer = tripEventsElement;
+
+    this.#pointModel.addObserver(this.#handelModeEvent);
   }
 
   get points() {
@@ -75,9 +75,10 @@ export default class TripPresenter {
       return;
     }
 
-    this.#sortPoints(sortType);
-    this.#clearlistPoints();
-    this.#renderListPoint();
+    this.#currentSortType = sortType;
+    // this.#renderListPoint();
+    this.#clearTrip();
+    this.#renderTrip();
   };
 
   /**
@@ -99,15 +100,45 @@ export default class TripPresenter {
     render(new FiltersView({filters}), this.#filterContainer);
   }
 
-  /**
-   * Обновляет информацию о точке в списке поездок и
-   * перерисовывает соответствующее представление точки.
-   * @param {Object} updatedPoint - Обновленные данные точки.
-   */
-  #handlePointChange = (updatedPoint) => {
-    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
-    this.#sourcePoints = updateItem(this.#sourcePoints, updatedPoint);
-    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  #handleViewAction = (actionType, updateType, update) => {
+    switch (actionType) {
+      case UserAction.UPDATE_POIN:
+        this.#pointModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this.#pointModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this.#pointModel.deletePoint(updateType, update);
+        break;
+    }
+  };
+
+  #handelModeEvent = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#pointPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        this.#clearTrip();
+        this.#renderTrip();
+        break;
+      case UpdateType.MAJOR:
+        this.#clearTrip({ resetSortType: true });
+        this.#renderTrip();
+        break;
+    }
+  };
+
+  #clearTrip = ({ resetSortType = false } = {}) => {
+    this.#pointPresenters.forEach((presenter) => presenter.removePoint());
+    this.#pointPresenters.clear();
+
+    remove(this.#sortComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   };
 
   /**
@@ -120,20 +151,11 @@ export default class TripPresenter {
       allOffers: this.#offerModel.offers,
       allDestinations: this.#destinationModel.destinations,
       onModeChange: this.#handleModeChange,
-      onDataChange: this.#handlePointChange
+      onDataChange: this.#handleViewAction
     });
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
-  }
-
-  /**
-   * Удаляет все представления точек из DOM и
-   * очищает коллекцию хранящихся экземпляров PointPresenter.
-   */
-  #clearlistPoints() {
-    this.#pointPresenters.forEach((presenter) => presenter.removePoint());
-    this.#pointPresenters.clear();
-  }
+  };
 
   /**
    * Изменяет представление точек путешествия.
