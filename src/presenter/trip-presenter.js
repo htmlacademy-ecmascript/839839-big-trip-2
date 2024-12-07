@@ -25,14 +25,9 @@ export default class TripPresenter {
   #routeComponent = new RouteView();
   #sortComponent = null;
 
-  #tripPoints = [];
-  #tripDestinations = [];
-  #tripOffers = [];
-
   #pointPresenters = new Map();
 
   #currentSortType = SortType.DAY;
-  #sourcePoints = [];
 
   constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement, filtersElement,
     tripEventsElement }) {
@@ -46,48 +41,34 @@ export default class TripPresenter {
   }
 
   get points() {
-    return this.#pointModel.points;
+    switch (this.#currentSortType) {
+      case SortType.DAY:
+        return [...this.#pointModel.points].sort(sortPointByDay);
+      case SortType.TIME:
+        return [...this.#pointModel.points].sort(sortPointByDuration);
+      case SortType.PRICE:
+        return [...this.#pointModel.points].sort(sortPointByPrice);
+    }
+    return [...this.#pointModel.points].sort(sortPointByDay);
   }
 
   init() {
-    /**
-     * Копия данных модели(временная)
-     */
-    this.#tripPoints = [...this.#pointModel.points];
-    this.#sourcePoints = [...this.#pointModel.points];
-    this.#tripDestinations = [...this.#destinationModel.destinations];
-    this.#tripOffers = [...this.#offerModel.offers];
-
     this.#renderPage();
   }
 
   /**
    * Рендеринг маршрута.
    */
-  #renderRoute() {
+  #renderRoute = () => {
     render(this.#routeComponent, this.#routeContainer, RenderPosition.AFTERBEGIN);
-  }
+  };
 
   /**
    * Рендеринг кнопки New event.
    */
-  #renderButtonNewEvent() {
+  #renderButtonNewEvent = () => {
     render(new ButtonNewEvent(), this.#routeContainer);
-  }
-
-  #sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.PRICE:
-        this.#tripPoints.sort(sortPointByPrice);
-        break;
-      case SortType.TIME:
-        this.#tripPoints.sort(sortPointByDuration);
-        break;
-      default:
-        this.#tripPoints = [...this.#sourcePoints];
-    }
-    this.#currentSortType = sortType;
-  }
+  };
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
@@ -102,13 +83,13 @@ export default class TripPresenter {
   /**
    * Рендеринг сортировки.
    */
-  #renderSort() {
+  #renderSort = () => {
     this.#sortComponent = new SortView({
       onSortTypeChange: this.#handleSortTypeChange,
       currentType: this.#currentSortType
     });
     render(this.#sortComponent, this.#sortContainer, RenderPosition.AFTERBEGIN);
-  }
+  };
 
   /**
    * Рендеринг фильтров.
@@ -133,11 +114,11 @@ export default class TripPresenter {
    * Рендеринг отдельной точки поездки.
    * @param {Object} point - Данные точки.
    */
-  #renderPoint(point) {
+  #renderPoint = (point) => {
     const pointPresenter = new PointPresenter({
       listPointsContainer: this.#listPointsComponent.element,
-      allOffers: this.#tripOffers,
-      allDestinations: this.#tripDestinations,
+      allOffers: this.#offerModel.offers,
+      allDestinations: this.#destinationModel.destinations,
       onModeChange: this.#handleModeChange,
       onDataChange: this.#handlePointChange
     });
@@ -161,11 +142,11 @@ export default class TripPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #renderListPoint() {
-    this.#tripPoints.forEach((point) => {
+  #renderListPoint = () => {
+    this.points.forEach((point) => {
       this.#renderPoint(point);
     });
-  }
+  };
 
   /**
    * Рендеринг всего списка поездок.
@@ -173,7 +154,7 @@ export default class TripPresenter {
   #renderTrip = () => {
     render(this.#listPointsComponent, this.#tripContainer);
 
-    if (!this.#tripPoints.length) {
+    if (!this.points.length) {
       render(new MessageView(Message.NEW_EVENT), this.#listPointsComponent.element);
       return;
     }
