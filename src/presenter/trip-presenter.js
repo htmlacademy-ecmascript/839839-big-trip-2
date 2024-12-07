@@ -1,14 +1,13 @@
 import RouteView from '../view/route-view.js';
-import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import { remove, render, RenderPosition } from '../framework/render.js';
 import ListPointsView from '../view/list-points-view.js';
 import MessageView from '../view/message-view.js';
-import { Message, SortType, UserAction, UpdateType } from '../const.js';
+import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
 import PointPresenter from './point-presenter.js';
-import { generateFilter } from '../utils/filter.js';
 import { sortPointByPrice, sortPointByDay, sortPointByDuration } from '../utils/sort.js';
 import ButtonNewEvent from '../view/button-new-event.js';
+import { filter } from '../utils/filter.js';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -16,40 +15,46 @@ export default class TripPresenter {
   #offerModel = null;
   #destinationModel = null;
   #routeContainer = null;
-  #filterContainer = null;
   #sortContainer = null;
+  #filterModel = null;
 
   #listPointsComponent = new ListPointsView();
   #routeComponent = new RouteView();
   #sortComponent = null;
+  #messageComponent = null;
 
   #pointPresenters = new Map();
 
   #currentSortType = SortType.DAY;
+  #filterType = FilterType.EVERYTHING;
 
-  constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement, filtersElement,
-    tripEventsElement }) {
+  constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement,tripEventsElement, filterModel }) {
     this.#tripContainer = tripContainer;
     this.#pointModel = pointModel;
     this.#offerModel = offerModel;
     this.#destinationModel = destinationModel;
     this.#routeContainer = tripMainElement;
-    this.#filterContainer = filtersElement;
     this.#sortContainer = tripEventsElement;
+    this.#filterModel = filterModel;
 
     this.#pointModel.addObserver(this.#handelModeEvent);
+    this.#filterModel.addObserver(this.#handelModeEvent);
   }
 
   get points() {
+    this.#filterType = this.#filterModel.filter;
+    const points = this.#pointModel.points;
+    const filteredPoint = filter[this.#filterType](points);
+
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return [...this.#pointModel.points].sort(sortPointByDay);
+        return filteredPoint.sort(sortPointByDay);
       case SortType.TIME:
-        return [...this.#pointModel.points].sort(sortPointByDuration);
+        return filteredPoint.sort(sortPointByDuration);
       case SortType.PRICE:
-        return [...this.#pointModel.points].sort(sortPointByPrice);
+        return filteredPoint.sort(sortPointByPrice);
     }
-    return [...this.#pointModel.points].sort(sortPointByDay);
+    return filteredPoint.sort(sortPointByDay);
   }
 
   init() {
@@ -92,14 +97,6 @@ export default class TripPresenter {
     render(this.#sortComponent, this.#sortContainer, RenderPosition.AFTERBEGIN);
   };
 
-  /**
-   * Рендеринг фильтров.
-   */
-  #renderFilter() {
-    const filters = generateFilter(this.#pointModel.points);
-    render(new FiltersView({filters}), this.#filterContainer);
-  }
-
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POIN:
@@ -136,6 +133,10 @@ export default class TripPresenter {
 
     remove(this.#sortComponent);
 
+    if (this.#messageComponent) {
+      remove(this.#messageComponent);
+    }
+
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
     }
@@ -170,6 +171,13 @@ export default class TripPresenter {
     });
   };
 
+  #renderMessage() {
+    this.#messageComponent = new MessageView({
+      filterType: this.#filterType
+    });
+    render(this.#messageComponent, this.#tripContainer);
+  }
+
   /**
    * Рендеринг всего списка поездок.
    */
@@ -177,7 +185,7 @@ export default class TripPresenter {
     render(this.#listPointsComponent, this.#tripContainer);
 
     if (!this.points.length) {
-      render(new MessageView(Message.NEW_EVENT), this.#listPointsComponent.element);
+      this.#renderMessage();
       return;
     }
 
@@ -191,7 +199,6 @@ export default class TripPresenter {
   #renderPage = () => {
     this.#renderRoute();
     this.#renderButtonNewEvent();
-    this.#renderFilter();
 
     this.#renderTrip();
   };
