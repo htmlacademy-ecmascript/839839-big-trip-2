@@ -58,7 +58,7 @@ export default class TripPresenter {
     this.#tripDestinations = [...this.#destinationModel.destinations];
     this.#tripOffers = [...this.#offerModel.offers];
 
-    this.#renderTrip();
+    this.#renderPage();
   }
 
   /**
@@ -170,10 +170,7 @@ export default class TripPresenter {
   /**
    * Рендеринг всего списка поездок.
    */
-  #renderTrip() {
-    this.#renderRoute();
-    this.#renderButtonNewEvent();
-    this.#renderFilter();
+  #renderTrip = () => {
     render(this.#listPointsComponent, this.#tripContainer);
 
     if (!this.#tripPoints.length) {
@@ -182,8 +179,17 @@ export default class TripPresenter {
     }
 
     this.#renderSort();
-    this.#sourcePoints.sort(sortPointByDay);
-
     this.#renderListPoint();
-  }
+  };
+
+  /**
+   * Рендеринг всей страницы.
+   */
+  #renderPage = () => {
+    this.#renderRoute();
+    this.#renderButtonNewEvent();
+    this.#renderFilter();
+
+    this.#renderTrip();
+  };
 }
