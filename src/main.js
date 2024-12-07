@@ -5,6 +5,8 @@ import PointModel from './model/point-model.js';
 import OfferModel from './model/offer-model.js';
 import DestinationModel from './model/destination-model.js';
 import FilterModel from './model/filter-model.js';
+import ButtonNewEventView from './view/button-new-event-view.js';
+import { render } from './framework/render.js';
 
 const tripMainElement = document.querySelector('.trip-main');
 const filtersElement = document.querySelector('.trip-controls__filters');
@@ -22,7 +24,8 @@ const tripPresenter = new TripPresenter({
   destinationModel,
   tripMainElement,
   tripEventsElement,
-  filterModel
+  filterModel,
+  onNewEventDestroy: handleNewEventFormClose
 });
 
 const filterPresenter = new FilterPresenter({
@@ -30,6 +33,21 @@ const filterPresenter = new FilterPresenter({
   filterModel,
   pointModel
 });
+
+const buttonNewEventComponent = new ButtonNewEventView({
+  onClick: handleNewEventButtonClick
+});
+
+function handleNewEventFormClose() {
+  buttonNewEventComponent.element.disabled = false;
+}
+
+function handleNewEventButtonClick() {
+  tripPresenter.createPoint();
+  buttonNewEventComponent.element.disabled = true;
+}
+
+render(buttonNewEventComponent, tripMainElement);
 
 filterPresenter.init();
 tripPresenter.init();
