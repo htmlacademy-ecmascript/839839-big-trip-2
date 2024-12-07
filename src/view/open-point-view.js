@@ -126,22 +126,22 @@ const createOpenPoint = (point, allOffers, allDestinations) => {
 };
 
 export default class OpenPointView extends AbstractStatefulView {
-  #point = null;
   #allOffers = null;
   #allDestinations = null;
   #handleButtonClick = null;
   #handleFormSubmit = null;
+  #handleDeleteClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick, onFormSubmit}) {
+  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick, onFormSubmit, onDeleteClick}) {
     super();
     this._setState(OpenPointView.parsePointToState(point));
-    this.#point = point;
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
     this.#handleButtonClick = onFormClick;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -174,10 +174,11 @@ export default class OpenPointView extends AbstractStatefulView {
 
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#onSaveClick);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onDeleteClick);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onRollupBtnClick);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteBtnClick);
     const offersList = this.element.querySelector('.event__available-offers');
     if (offersList) {
       offersList.addEventListener('change', this.#onOffersChange);
@@ -192,7 +193,12 @@ export default class OpenPointView extends AbstractStatefulView {
     this.#handleFormSubmit(OpenPointView.parseStateToPoint(this._state));
   };
 
-  #onDeleteClick = (evt) => {
+  #onDeleteBtnClick = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(OpenPointView.parseStateToPoint(this._state));
+  };
+
+  #onRollupBtnClick = (evt) => {
     evt.preventDefault();
     this.#handleButtonClick();
   };
