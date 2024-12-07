@@ -134,7 +134,7 @@ export default class OpenPointView extends AbstractStatefulView {
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick, onFormSubmit, onDeleteClick}) {
+  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick = false, onFormSubmit, onDeleteClick}) {
     super();
     this._setState(OpenPointView.parsePointToState(point));
     this.#allOffers = allOffers;
