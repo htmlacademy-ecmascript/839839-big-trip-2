@@ -48,9 +48,9 @@ const getPhotoContainer = (pictures) =>
     </div>
   </div>` : '';
 
-const createOpenPoint = (point, allOffers, allDestinations) => {
+const createOpenPoint = (point, allOffers, allDestinations, isNewPoint) => {
   const {dateFrom, dateTo, basePrice, isTypePoint, isDestinationId, isOffersId} = point;
-
+console.log(isNewPoint);
   const allOffersByType = allOffers.find((offer) => isTypePoint === offer.type).offers;
   const pointDestination = allDestinations.find((dest) => isDestinationId === dest.id);
   const selectedOffers = allOffersByType.filter((offer) => isOffersId.includes(offer.id));
@@ -106,10 +106,10 @@ const createOpenPoint = (point, allOffers, allDestinations) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
+          <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cansel' : 'Delete'}</button>
+          ${isNewPoint ? '' : `<button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
-          </button>
+          </button>`}
         </header>
         <section class="event__details">
           ${getListOffers(allOffersByType, selectedOffers)}
@@ -133,6 +133,7 @@ export default class OpenPointView extends AbstractStatefulView {
   #handleDeleteClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
+  #isNewPoint = null;
 
   constructor({point = newPointDefault, allOffers, allDestinations, onFormClick = false, onFormSubmit, onDeleteClick}) {
     super();
@@ -142,12 +143,15 @@ export default class OpenPointView extends AbstractStatefulView {
     this.#handleButtonClick = onFormClick;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
+    if (point === newPointDefault) {
+      this.#isNewPoint = true;
+    }
 
     this._restoreHandlers();
   }
 
   get template() {
-    return createOpenPoint(this._state, this.#allOffers, this.#allDestinations);
+    return createOpenPoint(this._state, this.#allOffers, this.#allDestinations, this.#isNewPoint);
   }
 
   /**
@@ -174,7 +178,12 @@ export default class OpenPointView extends AbstractStatefulView {
 
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#onSaveClick);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onRollupBtnClick);
+
+    const rollupBtn = this.element.querySelector('.event__rollup-btn');
+    if (rollupBtn) {
+      rollupBtn.addEventListener('click', this.#onRollupBtnClick);
+    }
+
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
