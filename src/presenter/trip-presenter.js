@@ -5,8 +5,8 @@ import ListPointsView from '../view/list-points-view.js';
 import MessageView from '../view/message-view.js';
 import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
 import PointPresenter from './point-presenter.js';
+import NewEventPresenter from './new-event-presenter.js';
 import { sortPointByPrice, sortPointByDay, sortPointByDuration } from '../utils/sort.js';
-import ButtonNewEvent from '../view/button-new-event.js';
 import { filter } from '../utils/filter.js';
 
 export default class TripPresenter {
@@ -24,11 +24,11 @@ export default class TripPresenter {
   #messageComponent = null;
 
   #pointPresenters = new Map();
-
+  #newEventPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
-  constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement,tripEventsElement, filterModel }) {
+  constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement,tripEventsElement, filterModel, onNewEventDestroy }) {
     this.#tripContainer = tripContainer;
     this.#pointModel = pointModel;
     this.#offerModel = offerModel;
@@ -36,6 +36,14 @@ export default class TripPresenter {
     this.#routeContainer = tripMainElement;
     this.#sortContainer = tripEventsElement;
     this.#filterModel = filterModel;
+
+    this.#newEventPresenter = new NewEventPresenter({
+      pointListContainer: this.#listPointsComponent.element,
+      destinationModel: this.#destinationModel,
+      offerModel: this.#offerModel,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewEventDestroy,
+    });
 
     this.#pointModel.addObserver(this.#handelModeEvent);
     this.#filterModel.addObserver(this.#handelModeEvent);
@@ -61,18 +69,16 @@ export default class TripPresenter {
     this.#renderPage();
   }
 
+  createPoint() {
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newEventPresenter.init();
+  }
+
   /**
    * Рендеринг маршрута.
    */
   #renderRoute = () => {
     render(this.#routeComponent, this.#routeContainer, RenderPosition.AFTERBEGIN);
-  };
-
-  /**
-   * Рендеринг кнопки New event.
-   */
-  #renderButtonNewEvent = () => {
-    render(new ButtonNewEvent(), this.#routeContainer);
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -128,6 +134,7 @@ export default class TripPresenter {
   };
 
   #clearTrip = ({ resetSortType = false } = {}) => {
+    this.#newEventPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.removePoint());
     this.#pointPresenters.clear();
 
@@ -162,6 +169,7 @@ export default class TripPresenter {
    * Изменяет представление точек путешествия.
    */
   #handleModeChange = () => {
+    this.#newEventPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -198,7 +206,6 @@ export default class TripPresenter {
    */
   #renderPage = () => {
     this.#renderRoute();
-    this.#renderButtonNewEvent();
 
     this.#renderTrip();
   };
