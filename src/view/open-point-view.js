@@ -3,6 +3,7 @@ import { formatDate, formatDateIso } from '../utils/utils.js';
 import { DateFormat } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import he from 'he';
 
 const newPointDefault =
   {
@@ -82,7 +83,7 @@ const createOpenPoint = (point, allOffers, allDestinations) => {
             <label class="event__label  event__type-output" for="event-destination-${point.id}">
             ${isTypePoint}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${isCheckDescription(pointDestination)}" list="destination-list-${point.id}" required">
+            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${he.encode(isCheckDescription(pointDestination))}" list="destination-list-${point.id}" required">
             <datalist id="destination-list-${point.id}">
             ${allDestinations.map((dest) => `<option value="${dest.name}"></option>`).join('')}
             </datalist>
@@ -189,7 +190,11 @@ export default class OpenPointView extends AbstractStatefulView {
 
   #onSaveClick = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(OpenPointView.parseStateToPoint(this._state));
+    const { destination, basePrice, dateFrom, dateTo } = this._state;
+
+    if (destination && basePrice && dateFrom && dateTo) {
+      this.#handleFormSubmit(OpenPointView.parseStateToPoint(this._state));
+    }
   };
 
   #onDeleteBtnClick = (evt) => {
