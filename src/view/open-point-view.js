@@ -4,19 +4,18 @@ import { DateFormat } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-const newPointDefault = [
+const newPointDefault =
   {
-    id: '',
-    type: 'Flight',
+    type: 'flight',
     dateFrom: '',
     dateTo: '',
     destination: '',
     offers: [],
     basePrice: 0,
     isFavorite: false,
-  }
-];
+  };
 
+const isCheckDescription = (description) => description ? description.name : '' ;
 const isChecked = (offer, selectedOffers) => selectedOffers.includes(offer) ? 'checked' : '';
 const isCheckedType = (pointType, offerType) => pointType === offerType ? 'checked' : '';
 
@@ -52,7 +51,7 @@ const createOpenPoint = (point, allOffers, allDestinations) => {
   const {dateFrom, dateTo, basePrice, isTypePoint, isDestinationId, isOffersId} = point;
 
   const allOffersByType = allOffers.find((offer) => isTypePoint === offer.type).offers;
-  const poinDestination = allDestinations.find((dest) => isDestinationId === dest.id);
+  const pointDestination = allDestinations.find((dest) => isDestinationId === dest.id);
   const selectedOffers = allOffersByType.filter((offer) => isOffersId.includes(offer.id));
 
   return(
@@ -83,7 +82,7 @@ const createOpenPoint = (point, allOffers, allDestinations) => {
             <label class="event__label  event__type-output" for="event-destination-${point.id}">
             ${isTypePoint}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${poinDestination.name}" list="destination-list-${point.id}">
+            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${isCheckDescription(pointDestination)}" list="destination-list-${point.id}" required">
             <datalist id="destination-list-${point.id}">
             ${allDestinations.map((dest) => `<option value="${dest.name}"></option>`).join('')}
             </datalist>
@@ -114,10 +113,10 @@ const createOpenPoint = (point, allOffers, allDestinations) => {
         <section class="event__details">
           ${getListOffers(allOffersByType, selectedOffers)}
 
-          ${!!poinDestination.description || !!poinDestination.pictures.length ? `<section class="event__section  event__section--destination">
+          ${pointDestination && (pointDestination.description || (pointDestination.pictures && pointDestination.pictures.length > 0)) ? `<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${poinDestination.description}</p>
-            ${getPhotoContainer(poinDestination.pictures)}
+            <p class="event__destination-description">${pointDestination.description || ''}</p>
+            ${getPhotoContainer(pointDestination.pictures)}
           </section>` : ''}
 
         </section>
