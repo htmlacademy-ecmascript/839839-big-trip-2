@@ -20,7 +20,10 @@ const TimeFormat = {
 };
 
 const Message = {
-  NEW_EVENT: 'Click New Event to create your first point',
+  EVERYTHING: 'Click New Event to create your first point',
+  PAST: 'There are no past events now',
+  PRESENT: 'There are no present events now',
+  FUTURE: 'There are no future events now',
 };
 
 const SortType = {
@@ -41,17 +44,15 @@ const Period = {
   DAY: 1440
 };
 
-const newPointDefault = [
-  {
-    id: '',
-    type: 'Flight',
-    dateFrom: '',
-    dateTo: '',
-    destination: '',
-    offers: [],
-    basePrice: 0,
-    isFavorite: false,
-  }
-];
+const UserAction = {
+  UPDATE_POIN: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
 
-export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode, Period, newPointDefault };
+export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode, Period, UserAction, UpdateType };

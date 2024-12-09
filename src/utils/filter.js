@@ -22,21 +22,4 @@ const filter = {
   [FilterType.PAST]: (points) => points.filter((point) => dayjs(point.dateTo).isBefore(dayjs())),
 };
 
-/**
- * Генерирует фильтры для точек поездки и подсчитывает количество точек поездки, соответствующих каждому фильтру.
- *
- * @param {Array<Object>} tripPoints - Массив объектов, представляющих точки поездки.
- * @returns {Array<Object>} Массив объектов, каждый из которых содержит:
- *   - {string} type - Тип фильтра (`EVERYTHING`, `FUTURE`, `PRESENT`, `PAST`).
- *   - {number} count - Количество точек, соответствующих данному фильтру.
- */
-function generateFilter(tripPoints) {
-  return Object.entries(filter).map(
-    ([filterType, filterPoints]) => ({
-      type: filterType,
-      count: filterPoints(tripPoints).length,
-    }),
-  );
-}
-
-export { generateFilter };
+export {filter};

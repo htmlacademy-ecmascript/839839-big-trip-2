@@ -2,6 +2,7 @@ import { replace, render, remove } from '../framework/render.js';
 import ItemPointView from '../view/item-point-view.js';
 import OpenPointView from '../view/open-point-view.js';
 import { Mode } from '../const.js';
+import { UserAction, UpdateType } from '../const.js';
 
 export default class PointPresenter {
   #listPointsComponent = null;
@@ -43,7 +44,8 @@ export default class PointPresenter {
       allOffers : this.#allOffers,
       allDestinations : this.#allDestinations,
       onFormClick: this.#handleFormClick,
-      onFormSubmit: this.#handleFormSubmit
+      onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     if (prevPointComponent === null || prevOpenPointComponent === null) {
@@ -122,6 +124,8 @@ export default class PointPresenter {
 
   #handleFavoriteClick = () => {
     this.#handleDataChange(
+      UserAction.UPDATE_POIN,
+      UpdateType.PATCH,
       {
         ...this.#point,
         isFavorite: !this.#point.isFavorite
@@ -130,7 +134,19 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point) => {
-    this.#handleDataChange(point);
+    this.#handleDataChange(
+      UserAction.UPDATE_POIN,
+      UpdateType.MINOR,
+      point
+    );
     this.#handleFormClick();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point
+    );
   };
 }
