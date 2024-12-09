@@ -3,6 +3,7 @@ import SortView from '../view/sort-view.js';
 import { remove, render, RenderPosition } from '../framework/render.js';
 import ListPointsView from '../view/list-points-view.js';
 import MessageView from '../view/message-view.js';
+import LoadingView from '../view/loading-view.js';
 import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
 import PointPresenter from './point-presenter.js';
 import NewEventPresenter from './new-event-presenter.js';
@@ -20,6 +21,7 @@ export default class TripPresenter {
 
   #listPointsComponent = new ListPointsView();
   #routeComponent = new RouteView();
+  #loadingComponent = new LoadingView();
   #sortComponent = null;
   #messageComponent = null;
 
@@ -27,6 +29,7 @@ export default class TripPresenter {
   #newEventPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement,tripEventsElement, filterModel, onNewEventDestroy }) {
     this.#tripContainer = tripContainer;
@@ -129,6 +132,10 @@ export default class TripPresenter {
         this.#clearTrip({ resetSortType: true });
         this.#renderTrip();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderTrip();
     }
   };
 
@@ -138,6 +145,7 @@ export default class TripPresenter {
     this.#pointPresenters.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (this.#messageComponent) {
       remove(this.#messageComponent);
@@ -185,11 +193,20 @@ export default class TripPresenter {
     render(this.#messageComponent, this.#tripContainer);
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#tripContainer);
+  }
+
   /**
    * Рендеринг всего списка поездок.
    */
   #renderTrip = () => {
     render(this.#listPointsComponent, this.#tripContainer);
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
 
     if (!this.points.length) {
       this.#renderMessage();
