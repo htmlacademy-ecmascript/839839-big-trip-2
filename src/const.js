@@ -53,6 +53,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode, Period, UserAction, UpdateType };
