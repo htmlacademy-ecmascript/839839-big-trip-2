@@ -201,12 +201,13 @@ export default class TripPresenter {
    * Рендеринг всего списка поездок.
    */
   #renderTrip = () => {
-    render(this.#listPointsComponent, this.#tripContainer);
-
     if (this.#isLoading) {
       this.#renderLoading();
       return;
     }
+
+    render(this.#listPointsComponent, this.#tripContainer);
+
 
     if (!this.points.length) {
       this.#renderMessage();
