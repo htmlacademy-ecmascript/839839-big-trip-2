@@ -57,7 +57,15 @@ function handleNewEventButtonClick() {
   buttonNewEventComponent.element.disabled = true;
 }
 
-render(buttonNewEventComponent, tripMainElement);
-
 filterPresenter.init();
 tripPresenter.init();
+
+offerModel.init().then(() =>
+  destinationModel.init().then(() =>
+    pointModel.init()
+      .finally(() => {
+        render(buttonNewEventComponent, tripMainElement);
+      })
+  )
+);
+
