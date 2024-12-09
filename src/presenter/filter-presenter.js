@@ -19,6 +19,10 @@ export default class FilterPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
+  /**
+   * Получть массив фильтров с их количеством
+   * @returns {Array<{type: FilterType, count: number}>} Массив объектов фильтров с типом и количеством.
+   */
   get filters() {
     const points = this.#pointModel.points;
 
@@ -51,6 +55,10 @@ export default class FilterPresenter {
     this.init();
   };
 
+  /**
+   * Обработчик изменения типа фильтра
+   * @param {FilterType} filterType - Новый тип фильтра
+   */
   #handleFilterTypeChange = (filterType) => {
     if (this.#filterModel.filter === filterType) {
       return;

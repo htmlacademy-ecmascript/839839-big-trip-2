@@ -87,7 +87,6 @@ export default class TripPresenter {
     }
 
     this.#currentSortType = sortType;
-    // this.#renderListPoint();
     this.#clearTrip();
     this.#renderTrip();
   };
