@@ -1,7 +1,6 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import OpenPointView from '../view/open-point-view.js';
 import { UserAction, UpdateType } from '../const.js';
-import { nanoid } from 'nanoid';
 
 export default class NewEventPresenter {
   #pointListContainer = null;
@@ -53,7 +52,7 @@ export default class NewEventPresenter {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...point}
+      {...point}
     );
     this.destroy();
   };
