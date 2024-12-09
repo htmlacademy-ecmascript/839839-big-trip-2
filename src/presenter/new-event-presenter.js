@@ -57,6 +57,17 @@ export default class NewEventPresenter {
     );
   }
 
+  setAborting() {
+    const resetFormState = () => {
+      this.#openPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#openPointComponent.shake(resetFormState);
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
