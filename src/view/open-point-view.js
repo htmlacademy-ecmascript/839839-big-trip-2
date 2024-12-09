@@ -49,8 +49,8 @@ const getPhotoContainer = (pictures) =>
   </div>` : '';
 
 const createOpenPoint = (point, allOffers, allDestinations, isNewPoint) => {
-  const {dateFrom, dateTo, basePrice, isTypePoint, isDestinationId, isOffersId} = point;
-console.log(isNewPoint);
+  const {isDateFrom, isDateTo, isTypePoint, isDestinationId, isOffersId, isPrice} = point;
+
   const allOffersByType = allOffers.find((offer) => isTypePoint === offer.type).offers;
   const pointDestination = allDestinations.find((dest) => isDestinationId === dest.id);
   const selectedOffers = allOffersByType.filter((offer) => isOffersId.includes(offer.id));
@@ -83,7 +83,7 @@ console.log(isNewPoint);
             <label class="event__label  event__type-output" for="event-destination-${point.id}">
             ${isTypePoint}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${he.encode(isCheckDescription(pointDestination))}" list="destination-list-${point.id}" required">
+            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${he.encode(isCheckDescription(pointDestination))}" list="destination-list-${point.id}" required>
             <datalist id="destination-list-${point.id}">
             ${allDestinations.map((dest) => `<option value="${dest.name}"></option>`).join('')}
             </datalist>
@@ -91,10 +91,10 @@ console.log(isNewPoint);
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${point.id}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${point.id}" type="text" name="event-start-time" value="${formatDate(dateFrom, DateFormat.SHORT_DATE_TIME)}">
+            <input class="event__input  event__input--time" id="event-start-time-${point.id}" type="text" name="event-start-time" value="${formatDate(isDateFrom, DateFormat.SHORT_DATE_TIME)}" required>
             &mdash;
             <label class="visually-hidden" for="event-end-time-${point.id}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${point.id}" type="text" name="event-end-time" value="${formatDate(dateTo, DateFormat.SHORT_DATE_TIME)}">
+            <input class="event__input  event__input--time" id="event-end-time-${point.id}" type="text" name="event-end-time" value="${formatDate(isDateTo, DateFormat.SHORT_DATE_TIME)}" required>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -102,7 +102,7 @@ console.log(isNewPoint);
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${point.id}" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-${point.id}" type="number" min="1" step="1" name="event-price" value="${isPrice}" required>
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -199,9 +199,9 @@ export default class OpenPointView extends AbstractStatefulView {
 
   #onSaveClick = (evt) => {
     evt.preventDefault();
-    const { destination, basePrice, dateFrom, dateTo } = this._state;
+    const { isDestinationId, isPrice, isDateFrom, isDateTo } = this._state;
 
-    if (destination && basePrice && dateFrom && dateTo) {
+    if (isDestinationId && isPrice && isDateFrom && isDateTo) {
       this.#handleFormSubmit(OpenPointView.parseStateToPoint(this._state));
     }
   };
@@ -226,12 +226,20 @@ export default class OpenPointView extends AbstractStatefulView {
 
   #onCityChange = (evt) => {
     evt.preventDefault();
+    const value = evt.target.value;
+    const options = this.#allDestinations.map((option) => option.name);
+
+    if (!options.includes(value)) {
+      evt.target.setCustomValidity('Пожалуйста, выберите город из предложенного списка.');
+    }
+
     const newIdDestination = this.#allDestinations.find((des) => des.name === evt.target.value);
     if(newIdDestination) {
       this.updateElement({
         isDestinationId: newIdDestination.id,
       });
     }
+
   };
 
   #onOffersChange = (evt) => {
