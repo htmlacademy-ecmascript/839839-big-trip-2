@@ -48,13 +48,21 @@ export default class NewEventPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
+  setSaving() {
+    this.#openPointComponent.updateElement(
+      {
+        isDisabled: true,
+        isSaving: true,
+      }
+    );
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {...point}
+      point
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {

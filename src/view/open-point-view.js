@@ -20,14 +20,14 @@ const isCheckDescription = (description) => description ? description.name : '' 
 const isChecked = (offer, selectedOffers) => selectedOffers.includes(offer) ? 'checked' : '';
 const isCheckedType = (pointType, offerType) => pointType === offerType ? 'checked' : '';
 
-const getListOffers = (allOffersByType, selectedOffers) =>
+const getListOffers = (allOffersByType, selectedOffers, isDisabled) =>
   allOffersByType.length ?
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
           ${allOffersByType.map((offer) => (`
             <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${isChecked(offer, selectedOffers)}>
+              <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${isChecked(offer, selectedOffers)} ${isDisabled ? 'disabled' : ''}>
               <label class="event__offer-label" for="event-offer-${offer.id}">
                 <span class="event__offer-title">${offer.title}</span>
                 +€&nbsp;
@@ -49,7 +49,7 @@ const getPhotoContainer = (pictures) =>
   </div>` : '';
 
 const createOpenPoint = (point, allOffers, allDestinations, isNewPoint) => {
-  const {isDateFrom, isDateTo, isTypePoint, isDestinationId, isOffersId, isPrice} = point;
+  const {isDateFrom, isDateTo, isTypePoint, isDestinationId, isOffersId, isPrice, isDisabled, isSaving, isDeleting} = point;
 
   const allOffersByType = allOffers.find((offer) => isTypePoint === offer.type).offers;
   const pointDestination = allDestinations.find((dest) => isDestinationId === dest.id);
@@ -64,10 +64,10 @@ const createOpenPoint = (point, allOffers, allDestinations, isNewPoint) => {
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${isTypePoint}.png" alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${point.id}" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${point.id}" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
             <div class="event__type-list">
-              <fieldset class="event__type-group">
+              <fieldset class="event__type-group" ${isDisabled ? 'disabled' : ''}>
                 <legend class="visually-hidden">Event type</legend>
 
                   ${allOffers.map((offer) => `<div class="event__type-item">
@@ -83,7 +83,7 @@ const createOpenPoint = (point, allOffers, allDestinations, isNewPoint) => {
             <label class="event__label  event__type-output" for="event-destination-${point.id}">
             ${isTypePoint}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${he.encode(isCheckDescription(pointDestination))}" list="destination-list-${point.id}" required>
+            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${he.encode(isCheckDescription(pointDestination))}" list="destination-list-${point.id}" required ${isDisabled ? 'disabled' : ''}>
             <datalist id="destination-list-${point.id}">
             ${allDestinations.map((dest) => `<option value="${dest.name}"></option>`).join('')}
             </datalist>
@@ -91,10 +91,10 @@ const createOpenPoint = (point, allOffers, allDestinations, isNewPoint) => {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${point.id}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${point.id}" type="text" name="event-start-time" value="${formatDate(isDateFrom, DateFormat.SHORT_DATE_TIME)}" required>
+            <input class="event__input  event__input--time" id="event-start-time-${point.id}" type="text" name="event-start-time" value="${formatDate(isDateFrom, DateFormat.SHORT_DATE_TIME)}" required ${isDisabled ? 'disabled' : ''}>
             &mdash;
             <label class="visually-hidden" for="event-end-time-${point.id}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${point.id}" type="text" name="event-end-time" value="${formatDate(isDateTo, DateFormat.SHORT_DATE_TIME)}" required>
+            <input class="event__input  event__input--time" id="event-end-time-${point.id}" type="text" name="event-end-time" value="${formatDate(isDateTo, DateFormat.SHORT_DATE_TIME)}" required ${isDisabled ? 'disabled' : ''}>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -102,17 +102,17 @@ const createOpenPoint = (point, allOffers, allDestinations, isNewPoint) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${point.id}" type="number" min="1" step="1" name="event-price" value="${isPrice}" required>
+            <input class="event__input  event__input--price" id="event-price-${point.id}" type="number" min="1" step="1" name="event-price" value="${isPrice}" required ${isDisabled ? 'disabled' : ''}>
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cansel' : 'Delete'}</button>
-          ${isNewPoint ? '' : `<button class="event__rollup-btn" type="button">
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNewPoint ? 'Cansel' : `${isDeleting ? 'Deleting...' : 'Delete'}`}</button>
+          ${isNewPoint ? '' : `<button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
             <span class="visually-hidden">Open event</span>
           </button>`}
         </header>
         <section class="event__details">
-          ${getListOffers(allOffersByType, selectedOffers)}
+          ${getListOffers(allOffersByType, selectedOffers, isDisabled)}
 
           ${pointDestination && (pointDestination.description || (pointDestination.pictures && pointDestination.pictures.length > 0)) ? `<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -311,6 +311,9 @@ export default class OpenPointView extends AbstractStatefulView {
       isDateFrom: point.dateFrom,
       isDateTo: point.dateTo,
       isPrice: point.basePrice,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
     });
 
   static parseStateToPoint = (state) => {
@@ -329,6 +332,9 @@ export default class OpenPointView extends AbstractStatefulView {
     delete point.isDateFrom;
     delete point.isDateTo;
     delete point.isPrice;
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
 
     return point;
   };
