@@ -1,17 +1,20 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { Message } from '../const.js';
 
-const createMessage = (message) =>
-  `<p class="trip-events__msg">${message}.</p>`;
+const createMessage = (filterType) => {
+  const message = Message[filterType.toUpperCase()];
+  return `<p class="trip-events__msg">${message}.</p>`;
+};
 
 export default class MessageView extends AbstractView {
-  #message = null;
+  #filterType = null;
 
-  constructor(message) {
+  constructor({ filterType}) {
     super();
-    this.#message = message;
+    this.#filterType = filterType;
   }
 
   get template() {
-    return createMessage(this.#message);
+    return createMessage(this.#filterType);
   }
 }

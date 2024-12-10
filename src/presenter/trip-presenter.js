@@ -1,181 +1,262 @@
+import { remove, render, RenderPosition } from '../framework/render.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import RouteView from '../view/route-view.js';
-import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
-import { render, RenderPosition } from '../framework/render.js';
 import ListPointsView from '../view/list-points-view.js';
 import MessageView from '../view/message-view.js';
-import { Message, SortType } from '../const.js';
+import LoadingView from '../view/loading-view.js';
 import PointPresenter from './point-presenter.js';
-import { generateFilter } from '../utils/filter.js';
-import { updateItem } from '../utils/utils.js';
+import NewEventPresenter from './new-event-presenter.js';
 import { sortPointByPrice, sortPointByDay, sortPointByDuration } from '../utils/sort.js';
-import ButtonNewEvent from '../view/button-new-event.js';
+import { filter } from '../utils/filter.js';
+import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class TripPresenter {
   #tripContainer = null;
   #pointModel = null;
+  #offerModel = null;
+  #destinationModel = null;
+  #filterModel = null;
   #routeContainer = null;
-  #filterContainer = null;
   #sortContainer = null;
 
   #listPointsComponent = new ListPointsView();
   #routeComponent = new RouteView();
+  #loadingComponent = new LoadingView();
   #sortComponent = null;
-
-  #tripPoints = [];
-  #tripDestinations = [];
-  #tripOffers = [];
+  #messageComponent = null;
 
   #pointPresenters = new Map();
-
+  #newEventPresenter = null;
   #currentSortType = SortType.DAY;
-  #sourcePoints = [];
+  #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
-  constructor({ tripContainer, pointModel, tripMainElement, filtersElement,
-    tripEventsElement }) {
+  constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement, tripEventsElement, filterModel, onNewEventDestroy }) {
     this.#tripContainer = tripContainer;
     this.#pointModel = pointModel;
+    this.#offerModel = offerModel;
+    this.#destinationModel = destinationModel;
     this.#routeContainer = tripMainElement;
-    this.#filterContainer = filtersElement;
     this.#sortContainer = tripEventsElement;
+    this.#filterModel = filterModel;
+
+    this.#newEventPresenter = new NewEventPresenter({
+      pointListContainer: this.#listPointsComponent.element,
+      destinationModel: this.#destinationModel,
+      offerModel: this.#offerModel,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewEventDestroy,
+    });
+
+    this.#pointModel.addObserver(this.#handelModeEvent);
+    this.#filterModel.addObserver(this.#handelModeEvent);
+  }
+
+  get points() {
+    this.#filterType = this.#filterModel.filter;
+    const points = this.#pointModel.points;
+    const filteredPoint = filter[this.#filterType](points);
+
+    switch (this.#currentSortType) {
+      case SortType.DAY:
+        return filteredPoint.sort(sortPointByDay);
+      case SortType.TIME:
+        return filteredPoint.sort(sortPointByDuration);
+      case SortType.PRICE:
+        return filteredPoint.sort(sortPointByPrice);
+    }
+    return filteredPoint.sort(sortPointByDay);
   }
 
   init() {
-    /**
-     * Копия данных модели(временная)
-     */
-    this.#tripPoints = [...this.#pointModel.point];
-    this.#sourcePoints = [...this.#pointModel.point];
-    this.#tripDestinations = [...this.#pointModel.destination];
-    this.#tripOffers = [...this.#pointModel.offer];
+    this.#renderPage();
+  }
 
-    this.#renderTrip();
+  createPoint() {
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newEventPresenter.init();
   }
 
   /**
    * Рендеринг маршрута.
    */
-  #renderRoute() {
+  #renderRoute = () => {
     render(this.#routeComponent, this.#routeContainer, RenderPosition.AFTERBEGIN);
-  }
-
-  /**
-   * Рендеринг кнопки New event.
-   */
-  #renderButtonNewEvent() {
-    render(new ButtonNewEvent(), this.#routeContainer);
-  }
-
-  #sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.PRICE:
-        this.#tripPoints.sort(sortPointByPrice);
-        break;
-      case SortType.TIME:
-        this.#tripPoints.sort(sortPointByDuration);
-        break;
-      default:
-        this.#tripPoints = [...this.#sourcePoints];
-    }
-    this.#currentSortType = sortType;
-  }
+  };
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
 
-    this.#sortPoints(sortType);
-    this.#clearlistPoints();
-    this.#renderListPoint();
+    this.#currentSortType = sortType;
+    this.#clearTrip();
+    this.#renderTrip();
   };
 
   /**
    * Рендеринг сортировки.
    */
-  #renderSort() {
+  #renderSort = () => {
     this.#sortComponent = new SortView({
       onSortTypeChange: this.#handleSortTypeChange,
       currentType: this.#currentSortType
     });
     render(this.#sortComponent, this.#sortContainer, RenderPosition.AFTERBEGIN);
-  }
+  };
 
-  /**
-   * Рендеринг фильтров.
-   */
-  #renderFilter() {
-    const filters = generateFilter(this.#pointModel.point);
-    render(new FiltersView({filters}), this.#filterContainer);
-  }
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
 
-  /**
-   * Обновляет информацию о точке в списке поездок и
-   * перерисовывает соответствующее представление точки.
-   * @param {Object} updatedPoint - Обновленные данные точки.
-   */
-  #handlePointChange = (updatedPoint) => {
-    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
-    this.#sourcePoints = updateItem(this.#sourcePoints, updatedPoint);
-    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+    switch (actionType) {
+      case UserAction.UPDATE_POIN:
+        this.#pointPresenters.get(update.id).setSaving();
+        try {
+          await this.#pointModel.updatePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenters.get(update.id).setAborting();
+        }
+        break;
+      case UserAction.ADD_POINT:
+        this.#newEventPresenter.setSaving();
+        try {
+          await this.#pointModel.addPoint(updateType, update);
+        } catch(err) {
+          this.#newEventPresenter.setAborting();
+        }
+        break;
+      case UserAction.DELETE_POINT:
+        this.#pointPresenters.get(update.id).setDeleting();
+        try {
+          await this.#pointModel.deletePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenters.get(update.id).setAborting();
+        }
+        break;
+    }
+
+    this.#uiBlocker.unblock();
+  };
+
+  #handelModeEvent = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#pointPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        this.#clearTrip();
+        this.#renderTrip();
+        break;
+      case UpdateType.MAJOR:
+        this.#clearTrip({ resetSortType: true });
+        this.#renderTrip();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderTrip();
+    }
+  };
+
+  #clearTrip = ({ resetSortType = false } = {}) => {
+    this.#newEventPresenter.destroy();
+    this.#pointPresenters.forEach((presenter) => presenter.removePoint());
+    this.#pointPresenters.clear();
+
+    if (this.#sortComponent) {
+      remove(this.#sortComponent);
+    }
+    if (this.#loadingComponent) {
+      remove(this.#loadingComponent);
+    }
+
+    if (this.#messageComponent) {
+      remove(this.#messageComponent);
+    }
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   };
 
   /**
    * Рендеринг отдельной точки поездки.
    * @param {Object} point - Данные точки.
    */
-  #renderPoint(point) {
+  #renderPoint = (point) => {
     const pointPresenter = new PointPresenter({
       listPointsContainer: this.#listPointsComponent.element,
-      allOffers: this.#tripOffers,
-      allDestinations: this.#tripDestinations,
+      allOffers: this.#offerModel.offers,
+      allDestinations: this.#destinationModel.destinations,
       onModeChange: this.#handleModeChange,
-      onDataChange: this.#handlePointChange
+      onDataChange: this.#handleViewAction
     });
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
-  }
-
-  /**
-   * Удаляет все представления точек из DOM и
-   * очищает коллекцию хранящихся экземпляров PointPresenter.
-   */
-  #clearlistPoints() {
-    this.#pointPresenters.forEach((presenter) => presenter.removePoint());
-    this.#pointPresenters.clear();
-  }
+  };
 
   /**
    * Изменяет представление точек путешествия.
    */
   #handleModeChange = () => {
+    this.#newEventPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #renderListPoint() {
-    this.#tripPoints.forEach((point) => {
+  #renderListPoint = () => {
+    this.points.forEach((point) => {
       this.#renderPoint(point);
     });
+  };
+
+  #renderMessage() {
+    this.#messageComponent = new MessageView({
+      filterType: this.#filterType
+    });
+    render(this.#messageComponent, this.#tripContainer);
+  }
+
+  #renderLoading() {
+    render(this.#loadingComponent, this.#tripContainer);
   }
 
   /**
    * Рендеринг всего списка поездок.
    */
-  #renderTrip() {
-    this.#renderRoute();
-    this.#renderButtonNewEvent();
-    this.#renderFilter();
+  #renderTrip = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     render(this.#listPointsComponent, this.#tripContainer);
 
-    if (!this.#tripPoints.length) {
-      render(new MessageView(Message.NEW_EVENT), this.#listPointsComponent.element);
+
+    if (!this.points.length) {
+      this.#renderMessage();
       return;
     }
 
     this.#renderSort();
-    this.#sourcePoints.sort(sortPointByDay);
-
     this.#renderListPoint();
-  }
+  };
+
+  /**
+   * Рендеринг всей страницы.
+   */
+  #renderPage = () => {
+    this.#renderRoute();
+
+    this.#renderTrip();
+  };
 }
