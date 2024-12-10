@@ -11,7 +11,7 @@ export default class NewEventPresenter {
 
   #openPointComponent = null;
 
-  constructor({pointListContainer, onDataChange, onDestroy, destinationModel, offerModel}) {
+  constructor({ pointListContainer, onDataChange, onDestroy, destinationModel, offerModel }) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
@@ -48,16 +48,14 @@ export default class NewEventPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
-  setSaving() {
-    this.#openPointComponent.updateElement(
-      {
-        isDisabled: true,
-        isSaving: true,
-      }
-    );
-  }
+  setSaving = () => {
+    this.#openPointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
 
-  setAborting() {
+  setAborting = () => {
     const resetFormState = () => {
       this.#openPointComponent.updateElement({
         isDisabled: false,
@@ -66,7 +64,7 @@ export default class NewEventPresenter {
       });
     };
     this.#openPointComponent.shake(resetFormState);
-  }
+  };
 
   #handleFormSubmit = (point) => {
     this.#handleDataChange(

@@ -41,7 +41,7 @@ export default class TripPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement,tripEventsElement, filterModel, onNewEventDestroy }) {
+  constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement, tripEventsElement, filterModel, onNewEventDestroy }) {
     this.#tripContainer = tripContainer;
     this.#pointModel = pointModel;
     this.#offerModel = offerModel;
@@ -173,8 +173,12 @@ export default class TripPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.removePoint());
     this.#pointPresenters.clear();
 
-    remove(this.#sortComponent);
-    remove(this.#loadingComponent);
+    if (this.#sortComponent) {
+      remove(this.#sortComponent);
+    }
+    if (this.#loadingComponent) {
+      remove(this.#loadingComponent);
+    }
 
     if (this.#messageComponent) {
       remove(this.#messageComponent);

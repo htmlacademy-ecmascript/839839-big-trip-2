@@ -60,12 +60,12 @@ function handleNewEventButtonClick() {
 filterPresenter.init();
 tripPresenter.init();
 
-offerModel.init().then(() =>
-  destinationModel.init().then(() =>
-    pointModel.init()
+offerModel.init()
+  .then(() => destinationModel.init()
+    .then(() => pointModel.init()
       .finally(() => {
         render(buttonNewEventComponent, tripMainElement);
       })
-  )
-);
+    )
+  );
 

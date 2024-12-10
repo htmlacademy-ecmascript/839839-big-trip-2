@@ -3,24 +3,24 @@ import { UpdateType } from '../const.js';
 
 export default class OfferModel extends Observable {
   #pointsApiService = null;
-  #offersModel = [];
+  #offers = [];
 
-  constructor({pointsApiService}) {
+  constructor({ pointsApiService }) {
     super();
     this.#pointsApiService = pointsApiService;
   }
 
+  get offers() {
+    return this.#offers;
+  }
+
   async init() {
     try {
-      this.#offersModel = await this.#pointsApiService.offers;
+      this.#offers = await this.#pointsApiService.offers;
     } catch(err) {
-      this.#offersModel = [];
+      this.#offers = [];
     }
 
     this._notify(UpdateType.INIT);
-  }
-
-  get offers() {
-    return this.#offersModel;
   }
 }
