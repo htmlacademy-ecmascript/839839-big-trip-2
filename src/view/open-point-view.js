@@ -4,6 +4,19 @@ import { DateFormat } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+const newPointDefault = [
+  {
+    id: '',
+    type: 'Flight',
+    dateFrom: '',
+    dateTo: '',
+    destination: '',
+    offers: [],
+    basePrice: 0,
+    isFavorite: false,
+  }
+];
+
 const isChecked = (offer, selectedOffers) => selectedOffers.includes(offer) ? 'checked' : '';
 const isCheckedType = (pointType, offerType) => pointType === offerType ? 'checked' : '';
 
@@ -121,7 +134,7 @@ export default class OpenPointView extends AbstractStatefulView {
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({point, allOffers, allDestinations, onFormClick, onFormSubmit}) {
+  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick, onFormSubmit}) {
     super();
     this._setState(OpenPointView.parsePointToState(point));
     this.#point = point;
@@ -164,6 +177,7 @@ export default class OpenPointView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onDeleteClick);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onCityChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
     const offersList = this.element.querySelector('.event__available-offers');
     if (offersList) {
       offersList.addEventListener('change', this.#onOffersChange);
@@ -194,9 +208,11 @@ export default class OpenPointView extends AbstractStatefulView {
   #onCityChange = (evt) => {
     evt.preventDefault();
     const newIdDestination = this.#allDestinations.find((des) => des.name === evt.target.value);
-    this.updateElement({
-      isDestinationId: newIdDestination.id,
-    });
+    if(newIdDestination) {
+      this.updateElement({
+        isDestinationId: newIdDestination.id,
+      });
+    }
   };
 
   #onOffersChange = (evt) => {
@@ -208,8 +224,15 @@ export default class OpenPointView extends AbstractStatefulView {
       updateOffers = updateOffers.filter((id) => id !== offerId);
     }
 
-    this.updateElement({
+    this._setState({
       isOffersId: updateOffers,
+    });
+  };
+
+  #onPriceChange = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      isPrice: Number(evt.target.value),
     });
   };
 
@@ -220,7 +243,7 @@ export default class OpenPointView extends AbstractStatefulView {
   };
 
   #dateToChangeHandler = ([userDate]) => {
-    this.updateElement({
+    this._setState({
       isDateTo: formatDateIso(userDate),
     });
   };
@@ -260,6 +283,7 @@ export default class OpenPointView extends AbstractStatefulView {
       isOffersId: [...point.offers],
       isDateFrom: point.dateFrom,
       isDateTo: point.dateTo,
+      isPrice: point.basePrice,
     });
 
   static parseStateToPoint = (state) => {
@@ -270,12 +294,14 @@ export default class OpenPointView extends AbstractStatefulView {
     point.offers = point.isOffersId;
     point.dateFrom = point.isDateFrom;
     point.dateTo = point.isDateTo;
+    point.basePrice = point.isPrice;
 
     delete point.isTypePoint;
     delete point.isDestinationId;
     delete point.isOffersId;
     delete point.isDateFrom;
     delete point.isDateTo;
+    delete point.isPrice;
 
     return point;
   };
