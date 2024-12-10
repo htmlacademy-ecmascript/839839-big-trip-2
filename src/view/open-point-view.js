@@ -3,7 +3,6 @@ import { formatDate, formatDateIso } from '../utils/utils.js';
 import { DateFormat } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import he from 'he';
 
 const newPointDefault =
   {
@@ -83,7 +82,7 @@ const createOpenPoint = (point, allOffers, allDestinations, isNewPoint) => {
             <label class="event__label  event__type-output" for="event-destination-${point.id}">
             ${isTypePoint}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${he.encode(isCheckDescription(pointDestination))}" list="destination-list-${point.id}" required ${isDisabled ? 'disabled' : ''}>
+            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${isCheckDescription(pointDestination)}" list="destination-list-${point.id}" required ${isDisabled ? 'disabled' : ''}>
             <datalist id="destination-list-${point.id}">
             ${allDestinations.map((dest) => `<option value="${dest.name}"></option>`).join('')}
             </datalist>
@@ -243,7 +242,7 @@ export default class OpenPointView extends AbstractStatefulView {
   };
 
   #onOffersChange = (evt) => {
-    const offerId = evt.target.id.split('-')[2];
+    const offerId = evt.target.id.replace('event-offer-', '');
     let updateOffers = [...this._state.isOffersId];
     if (evt.target.checked) {
       updateOffers.push(offerId);
