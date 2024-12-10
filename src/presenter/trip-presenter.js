@@ -1,23 +1,29 @@
+import { remove, render, RenderPosition } from '../framework/render.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import RouteView from '../view/route-view.js';
 import SortView from '../view/sort-view.js';
-import { remove, render, RenderPosition } from '../framework/render.js';
 import ListPointsView from '../view/list-points-view.js';
 import MessageView from '../view/message-view.js';
 import LoadingView from '../view/loading-view.js';
-import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
 import PointPresenter from './point-presenter.js';
 import NewEventPresenter from './new-event-presenter.js';
 import { sortPointByPrice, sortPointByDay, sortPointByDuration } from '../utils/sort.js';
 import { filter } from '../utils/filter.js';
+import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class TripPresenter {
   #tripContainer = null;
   #pointModel = null;
   #offerModel = null;
   #destinationModel = null;
+  #filterModel = null;
   #routeContainer = null;
   #sortContainer = null;
-  #filterModel = null;
 
   #listPointsComponent = new ListPointsView();
   #routeComponent = new RouteView();
@@ -30,6 +36,10 @@ export default class TripPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
   constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement,tripEventsElement, filterModel, onNewEventDestroy }) {
     this.#tripContainer = tripContainer;
@@ -106,6 +116,8 @@ export default class TripPresenter {
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_POIN:
         this.#pointPresenters.get(update.id).setSaving();
@@ -132,6 +144,8 @@ export default class TripPresenter {
         }
         break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handelModeEvent = (updateType, data) => {
