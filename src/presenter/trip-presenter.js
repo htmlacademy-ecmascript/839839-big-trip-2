@@ -1,6 +1,5 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
-import RouteView from '../view/route-view.js';
 import SortView from '../view/sort-view.js';
 import ListPointsView from '../view/list-points-view.js';
 import MessageView from '../view/message-view.js';
@@ -10,6 +9,7 @@ import NewEventPresenter from './new-event-presenter.js';
 import { sortPointByPrice, sortPointByDay, sortPointByDuration } from '../utils/sort.js';
 import { filter } from '../utils/filter.js';
 import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
+import RoutePresenter from './route-presenter.js';
 
 const TimeLimit = {
   LOWER_LIMIT: 350,
@@ -26,13 +26,13 @@ export default class TripPresenter {
   #sortContainer = null;
 
   #listPointsComponent = new ListPointsView();
-  #routeComponent = new RouteView();
   #loadingComponent = new LoadingView();
   #sortComponent = null;
   #messageComponent = null;
 
   #pointPresenters = new Map();
   #newEventPresenter = null;
+  #routePresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
@@ -91,7 +91,13 @@ export default class TripPresenter {
    * Рендеринг маршрута.
    */
   #renderRoute = () => {
-    render(this.#routeComponent, this.#routeContainer, RenderPosition.AFTERBEGIN);
+    this.#routePresenter = new RoutePresenter({
+      routeContainer: this.#routeContainer,
+      pointModel: this.#pointModel,
+      offerModel: this.#offerModel,
+      destinationModel: this.#destinationModel,
+    });
+    this.#routePresenter.init();
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -165,6 +171,7 @@ export default class TripPresenter {
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderTrip();
+        break;
     }
   };
 

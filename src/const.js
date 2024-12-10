@@ -11,6 +11,7 @@ const DateFormat = {
   FULL_DATE: 'YYYY-MM-DD',
   SHORT_DATE: 'MMM D',
   TIME: 'HH:mm',
+  ROUTE: 'D MMM',
 };
 
 const TimeFormat = {
