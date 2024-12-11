@@ -75,18 +75,6 @@ export default class PointPresenter {
   }
 
   /**
-   * Обработчик события нажатия клавиши 'Escape'.
-   * @param evt - Событие клавиатуры.
-   */
-  #onEscKeydown = (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      this.#openPointComponent.reset(this.#point);
-      this.#replaceOpenPointToPoint();
-    }
-  };
-
-  /**
    * Закрывает форму редактирования.
    */
   resetView() {
@@ -181,5 +169,17 @@ export default class PointPresenter {
       UpdateType.MINOR,
       point
     );
+  };
+
+  /**
+   * Обработчик события нажатия клавиши 'Escape'.
+   * @param evt - Событие клавиатуры.
+   */
+  #onEscKeydown = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#openPointComponent.reset(this.#point);
+      this.#replaceOpenPointToPoint();
+    }
   };
 }

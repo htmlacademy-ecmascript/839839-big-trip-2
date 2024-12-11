@@ -112,16 +112,6 @@ export default class TripPresenter {
     this.#routePresenter.init();
   };
 
-  #handleSortTypeChange = (sortType) => {
-    if (this.#currentSortType === sortType) {
-      return;
-    }
-
-    this.#currentSortType = sortType;
-    this.#clearTrip();
-    this.#renderTrip();
-  };
-
   /**
    * Рендеринг сортировки.
    */
@@ -133,9 +123,97 @@ export default class TripPresenter {
     render(this.#sortComponent, this.#sortContainer, RenderPosition.AFTERBEGIN);
   };
 
+  #clearTrip = ({ resetSortType = false } = {}) => {
+    this.#newEventPresenter.destroy();
+    this.#pointPresenters.forEach((presenter) => presenter.removePoint());
+    this.#pointPresenters.clear();
+
+    if (this.#sortComponent) {
+      remove(this.#sortComponent);
+    }
+    if (this.#loadingComponent) {
+      remove(this.#loadingComponent);
+    }
+
+    if (this.#messageComponent) {
+      remove(this.#messageComponent);
+    }
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
+  };
+
+  /**
+   * Рендеринг отдельной точки поездки.
+   * @param {Object} point - Данные точки.
+   */
+  #renderPoint = (point) => {
+    const pointPresenter = new PointPresenter({
+      listPointsContainer: this.#listPointsComponent.element,
+      allOffers: this.#offerModel.offers,
+      allDestinations: this.#destinationModel.destinations,
+      onModeChange: this.#handleModeChange,
+      onDataChange: this.#handleViewAction
+    });
+    pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter);
+  };
+
+  #renderListPoint = () => {
+    this.points.forEach((point) => {
+      this.#renderPoint(point);
+    });
+  };
+
+  #renderMessage() {
+    this.#messageComponent = new MessageView({
+      filterType: this.#filterType
+    });
+    render(this.#messageComponent, this.#tripContainer);
+  }
+
+  #renderLoading({isError}) {
+    this.#loadingComponent = new LoadingView(isError);
+    render(this.#loadingComponent, this.#tripContainer);
+  }
+
+  /**
+   * Рендеринг всего списка поездок.
+   */
+  #renderTrip = () => {
+    if (this.#isLoading) {
+      this.#renderLoading({ isError: false});
+      return;
+    }
+
+    if (this.#isError) {
+      this.#renderLoading({ isError: true});
+      return;
+    }
+
+    render(this.#listPointsComponent, this.#tripContainer);
+
+    if (!this.points.length) {
+      this.#renderMessage();
+      this.#routePresenter.destroy();
+      return;
+    }
+
+    this.#renderSort();
+    this.#renderListPoint();
+  };
+
+  /**
+   * Рендеринг всей страницы.
+   */
+  #renderPage = () => {
+    this.#renderRoute();
+    this.#renderTrip();
+  };
+
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
-
     switch (actionType) {
       case UserAction.UPDATE_POIN:
         this.#pointPresenters.get(update.id).setSaving();
@@ -193,43 +271,6 @@ export default class TripPresenter {
     }
   };
 
-  #clearTrip = ({ resetSortType = false } = {}) => {
-    this.#newEventPresenter.destroy();
-    this.#pointPresenters.forEach((presenter) => presenter.removePoint());
-    this.#pointPresenters.clear();
-
-    if (this.#sortComponent) {
-      remove(this.#sortComponent);
-    }
-    if (this.#loadingComponent) {
-      remove(this.#loadingComponent);
-    }
-
-    if (this.#messageComponent) {
-      remove(this.#messageComponent);
-    }
-
-    if (resetSortType) {
-      this.#currentSortType = SortType.DAY;
-    }
-  };
-
-  /**
-   * Рендеринг отдельной точки поездки.
-   * @param {Object} point - Данные точки.
-   */
-  #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter({
-      listPointsContainer: this.#listPointsComponent.element,
-      allOffers: this.#offerModel.offers,
-      allDestinations: this.#destinationModel.destinations,
-      onModeChange: this.#handleModeChange,
-      onDataChange: this.#handleViewAction
-    });
-    pointPresenter.init(point);
-    this.#pointPresenters.set(point.id, pointPresenter);
-  };
-
   /**
    * Изменяет представление точек путешествия.
    */
@@ -238,57 +279,13 @@ export default class TripPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #renderListPoint = () => {
-    this.points.forEach((point) => {
-      this.#renderPoint(point);
-    });
-  };
-
-  #renderMessage() {
-    this.#messageComponent = new MessageView({
-      filterType: this.#filterType
-    });
-    render(this.#messageComponent, this.#tripContainer);
-  }
-
-  #renderLoading({isError}) {
-    this.#loadingComponent = new LoadingView(isError);
-    render(this.#loadingComponent, this.#tripContainer);
-  }
-
-  /**
-   * Рендеринг всего списка поездок.
-   */
-  #renderTrip = () => {
-    if (this.#isLoading) {
-      this.#renderLoading({ isError: false});
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
       return;
     }
 
-    if (this.#isError) {
-      this.#renderLoading({ isError: true});
-      return;
-    }
-
-    render(this.#listPointsComponent, this.#tripContainer);
-
-
-    if (!this.points.length) {
-      this.#renderMessage();
-      this.#routePresenter.destroy();
-      return;
-    }
-
-    this.#renderSort();
-    this.#renderListPoint();
-  };
-
-  /**
-   * Рендеринг всей страницы.
-   */
-  #renderPage = () => {
-    this.#renderRoute();
-
+    this.#currentSortType = sortType;
+    this.#clearTrip();
     this.#renderTrip();
   };
 }

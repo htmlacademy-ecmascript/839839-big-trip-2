@@ -196,72 +196,6 @@ export default class OpenPointView extends AbstractStatefulView {
     this.#setDatepickerEnd();
   }
 
-  #onSaveClick = (evt) => {
-    evt.preventDefault();
-    const { isDestinationId, isPrice, isDateFrom, isDateTo } = this._state;
-
-    if (isDestinationId && isPrice && isDateFrom && isDateTo) {
-      this.#handleFormSubmit(OpenPointView.parseStateToPoint(this._state));
-    }
-  };
-
-  #onDeleteBtnClick = (evt) => {
-    evt.preventDefault();
-    this.#handleDeleteClick(OpenPointView.parseStateToPoint(this._state));
-  };
-
-  #onRollupBtnClick = (evt) => {
-    evt.preventDefault();
-    this.#handleButtonClick();
-  };
-
-  #onTypeChange = (evt)=> {
-    evt.preventDefault();
-    this.updateElement({
-      isTypePoint: evt.target.value,
-      isOffersId: []
-    });
-  };
-
-  #onCityChange = (evt) => {
-    evt.preventDefault();
-    const value = evt.target.value;
-    const options = this.#allDestinations.map((option) => option.name);
-
-    if (!options.includes(value)) {
-      evt.target.setCustomValidity('Пожалуйста, выберите город из предложенного списка.');
-    }
-
-    const newIdDestination = this.#allDestinations.find((des) => des.name === evt.target.value);
-    if(newIdDestination) {
-      this.updateElement({
-        isDestinationId: newIdDestination.id,
-      });
-    }
-
-  };
-
-  #onOffersChange = (evt) => {
-    const offerId = evt.target.id.replace('event-offer-', '');
-    let updateOffers = [...this._state.isOffersId];
-    if (evt.target.checked) {
-      updateOffers.push(offerId);
-    } else {
-      updateOffers = updateOffers.filter((id) => id !== offerId);
-    }
-
-    this._setState({
-      isOffersId: updateOffers,
-    });
-  };
-
-  #onPriceChange = (evt) => {
-    evt.preventDefault();
-    this._setState({
-      isPrice: Number(evt.target.value),
-    });
-  };
-
   #dateFromChangeHandler = ([userDate]) => {
     this.updateElement({
       isDateFrom: formatDateIso(userDate),
@@ -336,5 +270,71 @@ export default class OpenPointView extends AbstractStatefulView {
     delete point.isDeleting;
 
     return point;
+  };
+
+  #onSaveClick = (evt) => {
+    evt.preventDefault();
+    const { isDestinationId, isPrice, isDateFrom, isDateTo } = this._state;
+
+    if (isDestinationId && isPrice && isDateFrom && isDateTo) {
+      this.#handleFormSubmit(OpenPointView.parseStateToPoint(this._state));
+    }
+  };
+
+  #onDeleteBtnClick = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(OpenPointView.parseStateToPoint(this._state));
+  };
+
+  #onRollupBtnClick = (evt) => {
+    evt.preventDefault();
+    this.#handleButtonClick();
+  };
+
+  #onTypeChange = (evt)=> {
+    evt.preventDefault();
+    this.updateElement({
+      isTypePoint: evt.target.value,
+      isOffersId: []
+    });
+  };
+
+  #onCityChange = (evt) => {
+    evt.preventDefault();
+    const value = evt.target.value;
+    const options = this.#allDestinations.map((option) => option.name);
+
+    if (!options.includes(value)) {
+      evt.target.setCustomValidity('Пожалуйста, выберите город из предложенного списка.');
+    }
+
+    const newIdDestination = this.#allDestinations.find((des) => des.name === evt.target.value);
+    if(newIdDestination) {
+      this.updateElement({
+        isDestinationId: newIdDestination.id,
+      });
+    }
+
+  };
+
+  #onOffersChange = (evt) => {
+    const offerId = evt.target.id.replace('event-offer-', '');
+    let updateOffers = [...this._state.isOffersId];
+    if (evt.target.checked) {
+      updateOffers.push(offerId);
+    } else {
+      updateOffers = updateOffers.filter((id) => id !== offerId);
+    }
+
+    this._setState({
+      isOffersId: updateOffers,
+    });
+  };
+
+  #onPriceChange = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      isPrice: Number(evt.target.value),
+    });
   };
 }

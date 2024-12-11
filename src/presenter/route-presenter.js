@@ -69,10 +69,6 @@ export default class RoutePresenter {
     remove(prevRouteComponent);
   }
 
-  #handleModelEvent = () => {
-    this.init();
-  };
-
   destroy = () => {
     if (this.#routeComponent === null) {
       return;
@@ -80,5 +76,9 @@ export default class RoutePresenter {
 
     remove(this.#routeComponent);
     this.#routeComponent = null;
+  };
+
+  #handleModelEvent = () => {
+    this.init();
   };
 }
