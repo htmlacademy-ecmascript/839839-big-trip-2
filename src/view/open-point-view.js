@@ -105,10 +105,10 @@ const createOpenPoint = (point, allOffers, allDestinations, isNewPoint) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
-          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNewPoint ? 'Cansel' : `${isDeleting ? 'Deleting...' : 'Delete'}`}</button>
-          ${isNewPoint ? '' : `<button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
+          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNewPoint ? 'Cancel' : `${isDeleting ? 'Deleting...' : 'Delete'}`}</button>
+          <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
             <span class="visually-hidden">Open event</span>
-          </button>`}
+          </button>
         </header>
         <section class="event__details">
           ${getListOffers(allOffersByType, selectedOffers, isDisabled)}
@@ -134,7 +134,7 @@ export default class OpenPointView extends AbstractStatefulView {
   #datepickerTo = null;
   #isNewPoint = null;
 
-  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick = false, onFormSubmit, onDeleteClick}) {
+  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick, onFormSubmit, onDeleteClick}) {
     super();
     this._setState(OpenPointView.parsePointToState(point));
     this.#allOffers = allOffers;

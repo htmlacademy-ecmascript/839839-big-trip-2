@@ -55,6 +55,7 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR',
 };
 
 export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode, Period, UserAction, UpdateType };

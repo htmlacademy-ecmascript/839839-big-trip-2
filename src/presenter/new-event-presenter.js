@@ -28,6 +28,7 @@ export default class NewEventPresenter {
       allOffers: this.#offerModel.offers,
       allDestinations: this.#destinationModel.destinations,
       onFormSubmit: this.#handleFormSubmit,
+      onFormClick: this.#handleDeleteClick,
       onDeleteClick: this.#handleDeleteClick,
     });
 

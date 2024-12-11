@@ -26,7 +26,7 @@ export default class TripPresenter {
   #sortContainer = null;
 
   #listPointsComponent = new ListPointsView();
-  #loadingComponent = new LoadingView();
+  #loadingComponent = null;
   #sortComponent = null;
   #messageComponent = null;
 
@@ -36,6 +36,7 @@ export default class TripPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #isError = false;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
@@ -172,6 +173,12 @@ export default class TripPresenter {
         remove(this.#loadingComponent);
         this.#renderTrip();
         break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        this.#isError = true;
+        remove(this.#loadingComponent);
+        this.#renderTrip();
+        break;
     }
   };
 
@@ -233,7 +240,8 @@ export default class TripPresenter {
     render(this.#messageComponent, this.#tripContainer);
   }
 
-  #renderLoading() {
+  #renderLoading({isError}) {
+    this.#loadingComponent = new LoadingView(isError);
     render(this.#loadingComponent, this.#tripContainer);
   }
 
@@ -242,7 +250,12 @@ export default class TripPresenter {
    */
   #renderTrip = () => {
     if (this.#isLoading) {
-      this.#renderLoading();
+      this.#renderLoading({ isError: false});
+      return;
+    }
+
+    if (this.#isError) {
+      this.#renderLoading({ isError: true});
       return;
     }
 
@@ -251,6 +264,7 @@ export default class TripPresenter {
 
     if (!this.points.length) {
       this.#renderMessage();
+      this.#routePresenter.destroy();
       return;
     }
 

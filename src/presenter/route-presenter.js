@@ -21,7 +21,6 @@ export default class RoutePresenter {
   get dateFrom() {
     const points = this.#pointModel.points;
     return points[0].dateFrom;
-
   }
 
   get dateTo() {
@@ -35,9 +34,7 @@ export default class RoutePresenter {
       this.#destinationModel.destinations.find((des) => des.id === point.destination));
     const nameDestination = [];
     destinations.forEach((item) => {
-      if (!nameDestination.includes(item.name)) {
-        nameDestination.push(item.name);
-      }
+      nameDestination.push(item.name);
     });
     return nameDestination;
   }
@@ -74,5 +71,14 @@ export default class RoutePresenter {
 
   #handleModelEvent = () => {
     this.init();
+  };
+
+  destroy = () => {
+    if (this.#routeComponent === null) {
+      return;
+    }
+
+    remove(this.#routeComponent);
+    this.#routeComponent = null;
   };
 }
