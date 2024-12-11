@@ -41,8 +41,8 @@ const Mode = {
 };
 
 const Period = {
-  HOUR: 60,
-  DAY: 1440
+  HOUR: 24,
+  MINUTE: 60
 };
 
 const UserAction = {

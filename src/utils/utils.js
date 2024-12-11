@@ -15,19 +15,22 @@ const formatDate = (date, format = DateFormat.SHORT_DATE_TIME) =>
   date ? dayjs(date).format(format) : '';
 
 const getTimeDifference = (dateStart, dateEnd) => {
-  const difference = dayjs(dateEnd).diff(dayjs(dateStart), 'minute');
+  const difference = dayjs.duration(dayjs(dateEnd).diff(dayjs(dateStart)));
 
-  const timeLength = dayjs.duration(difference, 'minutes');
+  const days = Math.floor(difference.asDays());
+  const hours = Math.floor(difference.asHours() % Period.HOUR);
+  const minutes = Math.floor(difference.asMinutes() % Period.MINUTE);
 
-  if (difference < Period.HOUR) {
-    return `${timeLength.minutes()}m`;
+  let result = '';
+  if (days > 0) {
+    result += `${days.toString().padStart(2, '0')}D `;
   }
-
-  if (difference < Period.DAY) {
-    return `${timeLength.hours()}h ${timeLength.minutes()}m`;
+  if (hours > 0 || days > 0) {
+    result += `${hours.toString().padStart(2, '0')}H `;
   }
+  result += `${minutes.toString().padStart(2, '0')}M`;
 
-  return `${timeLength.days()}d ${timeLength.hours()}h ${timeLength.minutes()}m`;
+  return result.trim();
 };
 
 export { formatDate, getTimeDifference, formatDateIso };
