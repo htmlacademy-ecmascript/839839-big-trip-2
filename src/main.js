@@ -9,7 +9,7 @@ import PointsApiService from './points-api-service.js';
 import ButtonNewEventView from './view/button-new-event-view.js';
 import { render } from './framework/render.js';
 
-const AUTHORIZATION = 'Basic majdhj7Hjf';
+const AUTHORIZATION = 'Basic majdhj7Hjd';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const tripMainElement = document.querySelector('.trip-main');
@@ -49,11 +49,13 @@ const buttonNewEventComponent = new ButtonNewEventView({
 });
 
 function handleNewEventFormClose() {
+  tripPresenter.messageUpdate(true);
   buttonNewEventComponent.element.disabled = false;
 }
 
 function handleNewEventButtonClick() {
   tripPresenter.createPoint();
+  tripPresenter.messageUpdate();
   buttonNewEventComponent.element.disabled = true;
 }
 

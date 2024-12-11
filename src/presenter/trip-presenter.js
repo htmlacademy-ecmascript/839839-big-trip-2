@@ -88,6 +88,17 @@ export default class TripPresenter {
     this.#newEventPresenter.init();
   }
 
+  messageUpdate(isOpen) {
+    if (this.#messageComponent) {
+      remove(this.#messageComponent);
+    }
+    if(!this.#isError && isOpen) {
+      if(this.points.length === 0) {
+        this.#renderMessage();
+      }
+    }
+  }
+
   /**
    * Рендеринг маршрута.
    */
