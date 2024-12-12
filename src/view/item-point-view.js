@@ -59,7 +59,7 @@ export default class ItemPointView extends AbstractView {
   #handleRollupClick = null;
   #handleFavoriteClick = null;
 
-  constructor({point, allOffers, allDestinations, onRollupClick, onFavoriteClick}) {
+  constructor({ point, allOffers, allDestinations, onRollupClick, onFavoriteClick }) {
     super();
     this.#point = point;
     this.#allOffers = allOffers;

@@ -17,7 +17,7 @@ export default class PointPresenter {
   #pointComponent = null;
   #openPointComponent = null;
 
-  constructor({listPointsContainer, allOffers, allDestinations, onModeChange, onDataChange}) {
+  constructor({ listPointsContainer, allOffers, allDestinations, onModeChange, onDataChange }) {
     this.#listPointsComponent = listPointsContainer;
     this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;

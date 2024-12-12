@@ -6,7 +6,7 @@ const createButtonNewEventTemplate = () =>
 export default class ButtonNewEventView extends AbstractView {
   #handleClick = null;
 
-  constructor({onClick}) {
+  constructor({ onClick }) {
     super();
     this.#handleClick = onClick;
 

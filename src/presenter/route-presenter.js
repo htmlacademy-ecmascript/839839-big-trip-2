@@ -32,11 +32,11 @@ export default class RoutePresenter {
     const points = this.#pointModel.points;
     const destinations = points.map((point) =>
       this.#destinationModel.destinations.find((des) => des.id === point.destination));
-    const nameDestination = [];
+    const namesOfDestinations = [];
     destinations.forEach((item) => {
-      nameDestination.push(item.name);
+      namesOfDestinations.push(item.name);
     });
-    return nameDestination;
+    return namesOfDestinations;
   }
 
   get totalPrice() {

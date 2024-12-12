@@ -134,7 +134,7 @@ export default class OpenPointView extends AbstractStatefulView {
   #datepickerTo = null;
   #isNewPoint = null;
 
-  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick, onFormSubmit, onDeleteClick}) {
+  constructor({ point = newPointDefault, allOffers, allDestinations, onFormClick, onFormSubmit, onDeleteClick }) {
     super();
     this._setState(OpenPointView.parsePointToState(point));
     this.#allOffers = allOffers;
@@ -319,15 +319,15 @@ export default class OpenPointView extends AbstractStatefulView {
 
   #onOffersChange = (evt) => {
     const offerId = evt.target.id.replace('event-offer-', '');
-    let updateOffers = [...this._state.isOffersId];
+    let updatedOffers = [...this._state.isOffersId];
     if (evt.target.checked) {
-      updateOffers.push(offerId);
+      updatedOffers.push(offerId);
     } else {
-      updateOffers = updateOffers.filter((id) => id !== offerId);
+      updatedOffers = updatedOffers.filter((id) => id !== offerId);
     }
 
     this._setState({
-      isOffersId: updateOffers,
+      isOffersId: updatedOffers,
     });
   };
 
