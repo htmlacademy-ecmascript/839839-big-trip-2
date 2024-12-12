@@ -29,6 +29,7 @@ export default class TripPresenter {
   #loadingComponent = null;
   #sortComponent = null;
   #messageComponent = null;
+  #buttonNewEventComponent = null;
 
   #pointPresenters = new Map();
   #newEventPresenter = null;
@@ -42,8 +43,9 @@ export default class TripPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({ tripContainer, pointModel, offerModel, destinationModel, tripMainElement, tripEventsElement, filterModel, onNewEventDestroy }) {
+  constructor({ tripContainer, buttonNewEventComponent, pointModel, offerModel, destinationModel, tripMainElement, tripEventsElement, filterModel, onNewEventDestroy }) {
     this.#tripContainer = tripContainer;
+    this.#buttonNewEventComponent = buttonNewEventComponent;
     this.#pointModel = pointModel;
     this.#offerModel = offerModel;
     this.#destinationModel = destinationModel;
@@ -66,17 +68,17 @@ export default class TripPresenter {
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointModel.points;
-    const filteredPoint = filter[this.#filterType](points);
+    const filteredPoints = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return filteredPoint.sort(sortPointByDay);
+        return filteredPoints.sort(sortPointByDay);
       case SortType.TIME:
-        return filteredPoint.sort(sortPointByDuration);
+        return filteredPoints.sort(sortPointByDuration);
       case SortType.PRICE:
-        return filteredPoint.sort(sortPointByPrice);
+        return filteredPoints.sort(sortPointByPrice);
     }
-    return filteredPoint.sort(sortPointByDay);
+    return filteredPoints.sort(sortPointByDay);
   }
 
   init() {
@@ -173,7 +175,7 @@ export default class TripPresenter {
     render(this.#messageComponent, this.#tripContainer);
   }
 
-  #renderLoading({isError}) {
+  #renderLoading({ isError }) {
     this.#loadingComponent = new LoadingView(isError);
     render(this.#loadingComponent, this.#tripContainer);
   }
@@ -183,12 +185,12 @@ export default class TripPresenter {
    */
   #renderTrip = () => {
     if (this.#isLoading) {
-      this.#renderLoading({ isError: false});
+      this.#renderLoading({ isError: false });
       return;
     }
 
     if (this.#isError) {
-      this.#renderLoading({ isError: true});
+      this.#renderLoading({ isError: true });
       return;
     }
 
@@ -265,6 +267,7 @@ export default class TripPresenter {
       case UpdateType.ERROR:
         this.#isLoading = false;
         this.#isError = true;
+        this.#buttonNewEventComponent.element.disabled = true;
         remove(this.#loadingComponent);
         this.#renderTrip();
         break;

@@ -27,8 +27,13 @@ const destinationModel = new DestinationModel({
 });
 const filterModel = new FilterModel();
 
+const buttonNewEventComponent = new ButtonNewEventView({
+  onClick: handleNewEventButtonClick
+});
+
 const tripPresenter = new TripPresenter({
   tripContainer: tripEventsElement,
+  buttonNewEventComponent,
   pointModel,
   offerModel,
   destinationModel,
@@ -42,10 +47,6 @@ const filterPresenter = new FilterPresenter({
   filterContainer: filtersElement,
   filterModel,
   pointModel
-});
-
-const buttonNewEventComponent = new ButtonNewEventView({
-  onClick: handleNewEventButtonClick
 });
 
 function handleNewEventFormClose() {
