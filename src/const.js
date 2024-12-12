@@ -11,6 +11,7 @@ const DateFormat = {
   FULL_DATE: 'YYYY-MM-DD',
   SHORT_DATE: 'MMM D',
   TIME: 'HH:mm',
+  ROUTE: 'D MMM',
 };
 
 const TimeFormat = {
@@ -40,8 +41,8 @@ const Mode = {
 };
 
 const Period = {
-  HOUR: 60,
-  DAY: 1440
+  HOUR: 24,
+  MINUTE: 60
 };
 
 const UserAction = {
@@ -54,6 +55,7 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR',
 };
 
 export { DateFormat, TimeFormat, Message, FilterType, SortType, Mode, Period, UserAction, UpdateType };

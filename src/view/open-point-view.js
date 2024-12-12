@@ -104,11 +104,11 @@ const createOpenPoint = (point, allOffers, allDestinations, isNewPoint) => {
             <input class="event__input  event__input--price" id="event-price-${point.id}" type="number" min="1" step="1" name="event-price" value="${isPrice}" required ${isDisabled ? 'disabled' : ''}>
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
-          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNewPoint ? 'Cansel' : `${isDeleting ? 'Deleting...' : 'Delete'}`}</button>
-          ${isNewPoint ? '' : `<button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
+          <button class="event__save-btn  btn  btn--blue" type="submit" >${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : `${isDeleting ? 'Deleting...' : 'Delete'}`}</button>
+          <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
-          </button>`}
+          </button>
         </header>
         <section class="event__details">
           ${getListOffers(allOffersByType, selectedOffers, isDisabled)}
@@ -134,7 +134,7 @@ export default class OpenPointView extends AbstractStatefulView {
   #datepickerTo = null;
   #isNewPoint = null;
 
-  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick = false, onFormSubmit, onDeleteClick}) {
+  constructor({point = newPointDefault, allOffers, allDestinations, onFormClick, onFormSubmit, onDeleteClick}) {
     super();
     this._setState(OpenPointView.parsePointToState(point));
     this.#allOffers = allOffers;
@@ -195,72 +195,6 @@ export default class OpenPointView extends AbstractStatefulView {
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
   }
-
-  #onSaveClick = (evt) => {
-    evt.preventDefault();
-    const { isDestinationId, isPrice, isDateFrom, isDateTo } = this._state;
-
-    if (isDestinationId && isPrice && isDateFrom && isDateTo) {
-      this.#handleFormSubmit(OpenPointView.parseStateToPoint(this._state));
-    }
-  };
-
-  #onDeleteBtnClick = (evt) => {
-    evt.preventDefault();
-    this.#handleDeleteClick(OpenPointView.parseStateToPoint(this._state));
-  };
-
-  #onRollupBtnClick = (evt) => {
-    evt.preventDefault();
-    this.#handleButtonClick();
-  };
-
-  #onTypeChange = (evt)=> {
-    evt.preventDefault();
-    this.updateElement({
-      isTypePoint: evt.target.value,
-      isOffersId: []
-    });
-  };
-
-  #onCityChange = (evt) => {
-    evt.preventDefault();
-    const value = evt.target.value;
-    const options = this.#allDestinations.map((option) => option.name);
-
-    if (!options.includes(value)) {
-      evt.target.setCustomValidity('Пожалуйста, выберите город из предложенного списка.');
-    }
-
-    const newIdDestination = this.#allDestinations.find((des) => des.name === evt.target.value);
-    if(newIdDestination) {
-      this.updateElement({
-        isDestinationId: newIdDestination.id,
-      });
-    }
-
-  };
-
-  #onOffersChange = (evt) => {
-    const offerId = evt.target.id.replace('event-offer-', '');
-    let updateOffers = [...this._state.isOffersId];
-    if (evt.target.checked) {
-      updateOffers.push(offerId);
-    } else {
-      updateOffers = updateOffers.filter((id) => id !== offerId);
-    }
-
-    this._setState({
-      isOffersId: updateOffers,
-    });
-  };
-
-  #onPriceChange = (evt) => {
-    evt.preventDefault();
-    this._setState({
-      isPrice: Number(evt.target.value),
-    });
-  };
 
   #dateFromChangeHandler = ([userDate]) => {
     this.updateElement({
@@ -336,5 +270,71 @@ export default class OpenPointView extends AbstractStatefulView {
     delete point.isDeleting;
 
     return point;
+  };
+
+  #onSaveClick = (evt) => {
+    evt.preventDefault();
+    const { isDestinationId, isPrice, isDateFrom, isDateTo } = this._state;
+
+    if (isDestinationId && isPrice && isDateFrom && isDateTo) {
+      this.#handleFormSubmit(OpenPointView.parseStateToPoint(this._state));
+    }
+  };
+
+  #onDeleteBtnClick = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(OpenPointView.parseStateToPoint(this._state));
+  };
+
+  #onRollupBtnClick = (evt) => {
+    evt.preventDefault();
+    this.#handleButtonClick();
+  };
+
+  #onTypeChange = (evt)=> {
+    evt.preventDefault();
+    this.updateElement({
+      isTypePoint: evt.target.value,
+      isOffersId: []
+    });
+  };
+
+  #onCityChange = (evt) => {
+    evt.preventDefault();
+    const value = evt.target.value;
+    const options = this.#allDestinations.map((option) => option.name);
+
+    if (!options.includes(value)) {
+      evt.target.setCustomValidity('Пожалуйста, выберите город из предложенного списка.');
+    }
+
+    const newIdDestination = this.#allDestinations.find((des) => des.name === evt.target.value);
+    if(newIdDestination) {
+      this.updateElement({
+        isDestinationId: newIdDestination.id,
+      });
+    }
+
+  };
+
+  #onOffersChange = (evt) => {
+    const offerId = evt.target.id.replace('event-offer-', '');
+    let updateOffers = [...this._state.isOffersId];
+    if (evt.target.checked) {
+      updateOffers.push(offerId);
+    } else {
+      updateOffers = updateOffers.filter((id) => id !== offerId);
+    }
+
+    this._setState({
+      isOffersId: updateOffers,
+    });
+  };
+
+  #onPriceChange = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      isPrice: Number(evt.target.value),
+    });
   };
 }
